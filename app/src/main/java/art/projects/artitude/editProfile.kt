@@ -70,7 +70,11 @@ class editProfile : Fragment() {
         })
         update.setOnClickListener {
             //uploads the image and then updates the user
-            uploadUserImage()
+            if(selectedImage!=null){
+                uploadUserImage()
+            }else{
+                updateUser("")
+            }
         }
         imageSelect.setOnClickListener {
             var intent = Intent(Intent.ACTION_PICK);
@@ -81,13 +85,22 @@ class editProfile : Fragment() {
             updatedUser?.avatarUrl = null
             Picasso.get().load(R.drawable.profilenoimage).into(profile_image!!);
         }
+        logout.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            (activity as MainActivity).hideBottomActionBar()
+            (activity as MainActivity).hideActionBar()
+            Navigation.findNavController(view).navigate(R.id.login)
+
+        }
     }
 
     private fun updateUser(updatedImg:String?) {
         var database = FirebaseDatabase.getInstance().reference
         updatedUser?.username = username.text.toString()
         updatedUser?.bio = bio.text.toString()
-        updatedUser?.avatarUrl = updatedImg
+        if(updatedImg!=""){
+            updatedUser?.avatarUrl = updatedImg
+        }
         database.child("users").child(updatedUser?.uid.toString()).setValue(updatedUser)
         Navigation.findNavController(view!!).navigate(R.id.accountinfo)
     }

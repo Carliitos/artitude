@@ -19,12 +19,14 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
-            app:backgroundTint="#FFFFFF"
+            app:backgroundTint="#292929"
             android:elevation="20dp"
-            app:itemTextColor="#BD2E66"
-            app:itemIconTint="#BD2E66"
+            app:itemTextColor="#FFFFFF"
+            app:itemIconTint="#FFFFFF"
+            app:itemRippleColor="#AF357E"
             android:layout_width="match_parent"
             app:labelVisibilityMode="unlabeled"
+            
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:menu="@menu/bottom_navigation_menu" />

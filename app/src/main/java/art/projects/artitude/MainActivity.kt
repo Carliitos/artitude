@@ -21,33 +21,22 @@ class MainActivity : AppCompatActivity() {
 
         hideBottomActionBar()
         //Bottom menu
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            println("the chosen item is: "+item.title)
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.item_home -> {
                     navController.navigate(R.id.swiper)
-                    println("sñkdjfgslkjdf")
                     true
+
                 }
                 R.id.item_account -> {
                     navController.navigate(R.id.accountinfo)
+                    true
+                }
+                R.id.item_addImg -> {
+                    navController.navigate(R.id.uploadImages)
                     true
                 }
                 else -> false
-            }
-        }
-        bottom_navigation.setOnNavigationItemReselectedListener { item ->
-            when(item.itemId) {
-                R.id.item_home -> {
-                    navController.navigate(R.id.swiper)
-                    println("sñkdjfgslkjdf")
-
-                }
-                R.id.item_account -> {
-                    navController.navigate(R.id.accountinfo)
-
-                }
-
             }
         }
 
