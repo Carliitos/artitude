@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "192444640708",
+    "firebase_url": "https://artitude-843a9.firebaseio.com",
+    "project_id": "artitude-843a9",
+    "storage_bucket": "artitude-843a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192444640708:android:2c23e4252802e1127b0891",
+        "android_client_info": {
+          "package_name": "art.projects.artitude"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192444640708-b42325kbn5vsvua68vouljjvjviuo7j2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "art.projects.artitude",
+            "certificate_hash": "f4feed2f56d1dbe1c2e1d88609358382ef090530"
+          }
+        },
+        {
+          "client_id": "192444640708-8p10vedkpi4817qufg14jkue4brabesb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9PT0l54OF38yGMHzFFWGv8YLr1QFq-zA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192444640708-8p10vedkpi4817qufg14jkue4brabesb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

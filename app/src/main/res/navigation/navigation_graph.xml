@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/register_main">
+    <fragment
+        android:id="@+id/mainview"
+        android:name="art.projects.artitude.main_view"
+        android:label="fragment_main_view"
+        tools:layout="@layout/fragment_main_view" />
+    <fragment
+        android:id="@+id/register_main"
+        android:name="art.projects.artitude.register_main"
+        android:label="fragment_register_main"
+        tools:layout="@layout/fragment_register_main" >
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/login"
+            app:enterAnim="@anim/fragment_fade_enter" />
+    </fragment>
+    <fragment
+        android:id="@+id/login"
+        android:name="art.projects.artitude.login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/toRegister"
+            app:destination="@id/register_main" />
+    </fragment>
+    <fragment
+        android:id="@+id/swiper"
+        android:name="art.projects.artitude.swiper"
+        android:label="fragment_swiper"
+        tools:layout="@layout/fragment_swiper" />
+    <fragment
+        android:id="@+id/accountinfo"
+        android:name="art.projects.artitude.accountinfo"
+        android:label="Profile"
+        tools:layout="@layout/fragment_accountinfo" />
+    <fragment
+        android:id="@+id/editProfile"
+        android:name="art.projects.artitude.editProfile"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile" />
+</navigation>

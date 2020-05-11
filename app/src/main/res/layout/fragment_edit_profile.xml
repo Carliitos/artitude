@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1"
+    tools:context=".editProfile">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal">
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#88B6B6B6"/>
+            <Button
+                android:id="@+id/imageSelect"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Change Image"
+                android:background="@drawable/avatarbtn"
+                android:textColor="#FFFFFF"
+                />
+
+
+
+        </RelativeLayout>
+            <Button
+                android:id="@+id/deleteImg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/deletebtn"
+                android:textColor="#9AFFFFFF"
+                android:text="Delete Image"
+                android:layout_below="@+id/imageSelect"
+                />
+        <EditText
+            android:id="@+id/username"
+            android:layout_height="wrap_content"
+
+            android:layout_width="match_parent"
+            android:hint="Username"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/inputPadding"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:background="@drawable/editext"
+            android:layout_marginBottom="20dp"
+            android:inputType="textCapSentences"/>
+
+        <EditText
+            android:id="@+id/bio"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Bio"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/inputPadding"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/editext"
+            android:maxLength="50"
+            android:inputType="textMultiLine" />
+        <Button
+            android:id="@+id/update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loginbtn"
+            android:textColor="#FFFFFF"
+            android:text="Save Changes"
+            />
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="10dp"
+            />
+
+    </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
