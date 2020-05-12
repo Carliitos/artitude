@@ -32,6 +32,7 @@ class swiper : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as MainActivity).showBottomActionBar()
+        (activity as MainActivity).showActionBar()
 
         val flingContainer = frame as SwipeFlingAdapterView
 

@@ -95,12 +95,13 @@ class register_main : Fragment() {
     private fun saveUserToFirebase(avatar:String) {
         var database = FirebaseDatabase.getInstance().reference
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        val user = User(userId,username.text.toString(), avatar)
+        val user = User(userId,username.text.toString(), "", avatar)
 
         database.child("users").child(userId).setValue(user)
             .addOnSuccessListener {
                 Log.d("RegisterActivity","Register complete")
                 // ...
+                Navigation.findNavController(this.view!!).navigate(R.id.swiper)
             }
             .addOnFailureListener {
                 // Write failed
