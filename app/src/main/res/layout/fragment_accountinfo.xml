@@ -144,5 +144,11 @@
         android:layout_alignStart="@+id/followings"
         android:layout_alignEnd="@+id/followings"
         />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reciclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
 

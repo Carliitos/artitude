@@ -6,10 +6,20 @@
         android:icon="@drawable/homeicon"
         android:title="Home"/>
     <item
+        android:id="@+id/search"
+        android:enabled="true"
+        android:icon="@drawable/search"
+        android:title="search"/>
+    <item
         android:id="@+id/item_addImg"
         android:enabled="true"
         android:icon="@drawable/insertimage"
         android:title="Add Image"/>
+    <item
+        android:id="@+id/item_trends"
+        android:enabled="true"
+        android:icon="@drawable/trends"
+        android:title="Trends"/>
     <item
         android:id="@+id/item_account"
         android:enabled="true"

@@ -26,7 +26,6 @@
             app:itemRippleColor="#AF357E"
             android:layout_width="match_parent"
             app:labelVisibilityMode="unlabeled"
-            
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:menu="@menu/bottom_navigation_menu" />

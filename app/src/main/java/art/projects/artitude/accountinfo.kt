@@ -36,6 +36,7 @@ class accountinfo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val ref = FirebaseDatabase.getInstance().getReference("/users");
+        var postList:List<Post>? = null
 
         var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(FirebaseAuth.getInstance().uid.toString())
         usersRef.addValueEventListener(object:ValueEventListener{
