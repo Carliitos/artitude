@@ -52,6 +52,7 @@ class uploadImages : Fragment() {
 
         CropImage.activity()
             .setGuidelines(CropImageView.Guidelines.ON)
+            .setAspectRatio(1, 1)
             .start(context!!, this);
 
         registerbtn.setOnClickListener {

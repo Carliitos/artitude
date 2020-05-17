@@ -6,8 +6,25 @@
     android:background="@drawable/background1"
     tools:context=".accountinfo">
 
-
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/profilenoimage"
+        android:layout_marginTop="20dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#88B6B6B6"/>
     <TextView
         android:id="@+id/userProfName"
         android:layout_width="match_parent"
@@ -15,10 +32,8 @@
         android:gravity="center"
         android:textSize="22dp"
         android:layout_marginTop="20sp"
-        android:layout_centerVertical="true"
         android:text=""
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/profile_image"
         android:textStyle="bold"
 
         />
@@ -34,27 +49,15 @@
         android:textColor="#FFFFFF"
         android:textSize="17dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/userProfName"
         />
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/profilenoimage"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#88B6B6B6"/>
+
     <LinearLayout
         android:id="@+id/followings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/bios"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -138,17 +141,19 @@
         android:background="@drawable/loginbtn"
         android:textColor="#FFFFFF"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
         android:text="Edit profile"
         android:textAllCaps="false"
-        android:layout_below="@+id/followings"
-        android:layout_alignStart="@+id/followings"
-        android:layout_alignEnd="@+id/followings"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reciclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content">
 
     </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+</ScrollView>
     </RelativeLayout>
 
