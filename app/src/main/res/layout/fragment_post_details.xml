@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1"
+    tools:context=".PostDetails">
+    <RelativeLayout
+        android:id="@+id/deleteWarning"
+        android:background="#8D000000"
+        android:translationZ="999999dp"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/warningbackground">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:textColor="#FFFFFF"
+            android:text="Are you sure that you want to delete this picture?"
+
+            />
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="yes"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/loginbtn"
+            android:layout_marginBottom="10dp"
+            />
+        <Button
+            android:id="@+id/deny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="no"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/loginbtn"
+            />
+    </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/profilenoimage"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#88B6B6B6"/>
+
+        <TextView
+            android:id="@+id/username"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/profile_image"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete"
+
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/postimage"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17dp"
+        android:layout_margin="10dp"
+        android:textColor="#FFFFFF"
+        android:text=""
+        />
+        <TextView
+        android:id="@+id/tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17dp"
+        android:layout_margin="10dp"
+        android:textColor="#2196F3"
+        android:text=""
+        />
+    </LinearLayout>
+
+</RelativeLayout>

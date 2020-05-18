@@ -41,7 +41,7 @@ class swiper : Fragment() {
         al!!.add("c")
         al!!.add("python")
         al!!.add("java")
-        //arrayAdapter = ArrayAdapter<String>(this.requireContext(), R.layout.item, R.id.helloText, al!!)
+        arrayAdapter = ArrayAdapter<String>(this.requireContext(), R.layout.item, R.id.name, al!!)
 
         //set the listener and the adapter
         flingContainer.setAdapter(arrayAdapter);

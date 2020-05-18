@@ -48,4 +48,9 @@
         android:name="art.projects.artitude.uploadImages"
         android:label="Upload Image"
         tools:layout="@layout/fragment_upload_images" />
+    <fragment
+        android:id="@+id/postDetails"
+        android:name="art.projects.artitude.PostDetails"
+        android:label="Publishings"
+        tools:layout="@layout/fragment_post_details" />
 </navigation>

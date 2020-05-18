@@ -42,7 +42,7 @@ class accountinfo : Fragment() {
         var imageAdapter:ProfileImagesAdapter? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val ref = FirebaseDatabase.getInstance().getReference("/users");
+
 
         var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(FirebaseAuth.getInstance().uid.toString())
         usersRef.addValueEventListener(object:ValueEventListener{
@@ -54,7 +54,11 @@ class accountinfo : Fragment() {
                         if(profile_image!=null && user?.avatarUrl!!.isNotEmpty()){
                             Picasso.get().load(user.avatarUrl).into(profile_image!!);
                         }
-                        bios?.text = user?.bio
+                        if(user?.bio!=""){
+                            bios?.text = user?.bio
+                        }else{
+                            bios.visibility=View.GONE
+                        }
 
                     }
 
@@ -74,7 +78,7 @@ class accountinfo : Fragment() {
         reciclerView.layoutManager = linearLayoutManager
 
         postList = ArrayList()
-        imageAdapter = context?.let { ProfileImagesAdapter(it, postList as ArrayList<Post>)}
+        imageAdapter = context?.let { ProfileImagesAdapter(it, postList as ArrayList<Post>, Navigation.findNavController(this.view!!))}
         reciclerView.adapter = imageAdapter
         getUserPictures()
 
