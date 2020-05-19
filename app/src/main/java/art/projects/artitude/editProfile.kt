@@ -2,6 +2,8 @@ package art.projects.artitude
 
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -105,32 +107,35 @@ class editProfile : Fragment() {
             updatedUser?.avatarUrl = updatedImg
         }
         database.child("users").child(updatedUser?.uid.toString()).setValue(updatedUser)
+
         Navigation.findNavController(view!!).navigate(R.id.accountinfo)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==0 && resultCode == Activity.RESULT_OK&&data!=null){
-            //Selecting the profile picture
-            selectedImage = data.data!!
-            var imageStream = context?.contentResolver?.openInputStream(selectedImage!!);
 
-
-
-            var bitmap = BitmapFactory.decodeStream(imageStream)
-            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, false)
-            profile_image.setImageBitmap(bitmap) //Scaled
-            imageSelect.alpha=0f
-
+        val result = CropImage.getActivityResult(data)
+        if (resultCode == RESULT_OK &&  requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val resultUri = result.uri
+            selectedImage = resultUri
+            //image.setImageURI(resultUri)
+            Picasso.get().load(resultUri).into(profile_image!!);
+        } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            val error = result.error
         }
     }
     private fun uploadUserImage() {
+        val progressDialog = ProgressDialog(this.requireContext())
+        progressDialog.setTitle("Updating")
+        progressDialog.setMessage("This could take a few seconds")
+        progressDialog.show()
         val filename = UUID.randomUUID();
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
         ref.putFile(selectedImage!!)
             .addOnSuccessListener {
                 Log.d("Register","Successfully uploaded image")
                 ref.downloadUrl.addOnSuccessListener {
+                    progressDialog.dismiss()
                     updateUser(it.toString())
                 }
             }

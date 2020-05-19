@@ -2,6 +2,8 @@ package art.projects.artitude
 
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.app.ProgressDialog
 import android.content.ContentResolver
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -16,12 +18,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_register_main.*
@@ -43,7 +47,7 @@ class register_main : Fragment() {
 
 
     }
-
+    var progressDialog:ProgressDialog?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.actionBar?.hide();
@@ -54,6 +58,10 @@ class register_main : Fragment() {
             if(email.text.toString().isEmpty()||password.text.toString().isEmpty()){
                 errorText.text= "You must fill in all the fields ⚠️"
             }else{
+                progressDialog = ProgressDialog(this.requireContext())
+                progressDialog!!.setTitle("Registering...")
+                progressDialog!!.setMessage("This could take a few seconds")
+                progressDialog!!.show()
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
@@ -82,6 +90,7 @@ class register_main : Fragment() {
     }
 
     private fun uploadUserImage() {
+
         val filename = UUID.randomUUID();
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
         ref.putFile(selectedImage!!)
@@ -104,6 +113,7 @@ class register_main : Fragment() {
             .addOnSuccessListener {
                 Log.d("RegisterActivity","Register complete")
                 // ...
+                progressDialog!!.dismiss()
                 Navigation.findNavController(this.view!!).navigate(R.id.swiper)
             }
             .addOnFailureListener {
@@ -119,17 +129,16 @@ class register_main : Fragment() {
     var selectedImage: Uri?=null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==0 && resultCode == Activity.RESULT_OK&&data!=null){
-            //Selecting the profile picture
-            selectedImage = data.data!!
-            var imageStream = context?.contentResolver?.openInputStream(selectedImage!!);
 
 
-
-            var bitmap = BitmapFactory.decodeStream(imageStream)
-            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, false)
-            profile_image.setImageBitmap(bitmap) //Scaled
-            imageSelect.alpha=0f
+        val result = CropImage.getActivityResult(data)
+        if (resultCode == RESULT_OK &&  requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val resultUri = result.uri
+            selectedImage = resultUri
+            //image.setImageURI(resultUri)
+            Picasso.get().load(resultUri).into(profile_image!!);
+        } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            val error = result.error
         }
     }
 
