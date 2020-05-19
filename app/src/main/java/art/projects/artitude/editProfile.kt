@@ -20,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import java.util.*
 
@@ -77,9 +79,10 @@ class editProfile : Fragment() {
             }
         }
         imageSelect.setOnClickListener {
-            var intent = Intent(Intent.ACTION_PICK);
-            intent.type="image/*"
-            startActivityForResult(intent,0)
+            CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1, 1)
+                .start(context!!, this);
         }
         deleteImg.setOnClickListener {
             updatedUser?.avatarUrl = null

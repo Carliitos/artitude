@@ -51,6 +51,6 @@
     <fragment
         android:id="@+id/postDetails"
         android:name="art.projects.artitude.PostDetails"
-        android:label="Publishings"
+        android:label="Post"
         tools:layout="@layout/fragment_post_details" />
 </navigation>

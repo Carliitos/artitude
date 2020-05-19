@@ -1,5 +1,6 @@
 package art.projects.artitude
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -73,5 +74,6 @@ class MainActivity : AppCompatActivity() {
     fun showBottomActionBar(){
         bottom_navigation.visibility= View.VISIBLE
     }
+
 
 }

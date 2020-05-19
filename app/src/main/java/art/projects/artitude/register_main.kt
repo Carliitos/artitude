@@ -22,6 +22,8 @@ import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_register_main.*
 import java.util.*
 
@@ -72,9 +74,10 @@ class register_main : Fragment() {
         //Hiding the action bar
         (activity as MainActivity).hideActionBar()
         imageSelect.setOnClickListener {
-            var intent = Intent(Intent.ACTION_PICK);
-            intent.type="image/*"
-            startActivityForResult(intent,0)
+            CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1, 1)
+                .start(context!!, this);
         }
     }
 

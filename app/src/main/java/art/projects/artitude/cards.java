@@ -8,12 +8,14 @@ public class cards {
     private String userId;
     private String name;
     private String profileImageUrl;
-    public cards (String userId, String name, String profileImageUrl){
+    private String postid;
+    public cards (String userId, String name, String profileImageUrl,String postid){
         this.userId = userId;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
+        this.postid = postid;
     }
-
+    public String getPostId(){return postid;}
     public String getUserId(){
         return userId;
     }
