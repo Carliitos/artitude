@@ -1,12 +1,9 @@
 package art.projects.artitude
 
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import art.projects.artitude.Models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -40,7 +38,7 @@ class editProfile : Fragment() {
         return inflater.inflate(R.layout.fragment_edit_profile, container, false)
     }
 
-    var updatedUser:User? = null
+    var updatedUser: User? = null
     var selectedImage: Uri?=null
     var firstTime = true;
 
@@ -59,7 +57,12 @@ class editProfile : Fragment() {
                         Picasso.get().load(R.drawable.profilenoimage).into(profile_image!!);
                     }
                     if(firstTime){
-                        updatedUser = User(user?.uid, user?.username, user?.bio, user?.avatarUrl)
+                        updatedUser = User(
+                            user?.uid,
+                            user?.username,
+                            user?.bio,
+                            user?.avatarUrl
+                        )
                         firstTime = false
                     }
 

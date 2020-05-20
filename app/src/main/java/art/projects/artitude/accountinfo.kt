@@ -1,16 +1,18 @@
 package art.projects.artitude
 
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import art.projects.artitude.Adapter.ProfileImagesAdapter
+import art.projects.artitude.Models.Post
+import art.projects.artitude.Models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,7 +22,6 @@ import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.fragment_accountinfo.*
 import kotlinx.android.synthetic.main.fragment_accountinfo.profile_image
-import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -39,12 +40,20 @@ class accountinfo : Fragment() {
     }
 
         var postList:List<Post>? = null
-        var imageAdapter:ProfileImagesAdapter? = null
+        var imageAdapter: ProfileImagesAdapter? = null
+        var userId:String?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val preferences = context?.getSharedPreferences("USER", Context.MODE_PRIVATE)
+        if(preferences!=null){
+            userId = preferences.getString("userid","none")!!
 
-        var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(FirebaseAuth.getInstance().uid.toString())
+        }else{
+            userId=FirebaseAuth.getInstance().uid.toString()
+        }
+
+        var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
         usersRef.addValueEventListener(object:ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                     if(p0.exists()){
@@ -78,7 +87,13 @@ class accountinfo : Fragment() {
         reciclerView.layoutManager = linearLayoutManager
 
         postList = ArrayList()
-        imageAdapter = context?.let { ProfileImagesAdapter(it, postList as ArrayList<Post>, Navigation.findNavController(this.view!!))}
+        imageAdapter = context?.let {
+            ProfileImagesAdapter(
+                it,
+                postList as ArrayList<Post>,
+                Navigation.findNavController(this.view!!)
+            )
+        }
         reciclerView.adapter = imageAdapter
         getUserPictures()
 
@@ -92,7 +107,7 @@ class accountinfo : Fragment() {
                     (postList as ArrayList<Post>).clear()
                     for(snapshot in p0.children){
                         val post = snapshot.getValue(Post::class.java)!!
-                        if(post.user.equals(FirebaseAuth.getInstance().uid)){
+                        if(post.user.equals(userId)){
                             (postList as ArrayList<Post>).add(post)
                         }
                         Collections.reverse(postList)

@@ -35,11 +35,18 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 R.id.item_account -> {
+                    val editor = this.getSharedPreferences("USER",Context.MODE_PRIVATE).edit()
+                    editor.putString("userid",FirebaseAuth.getInstance().uid.toString())
+                    editor.apply()
                     navController.navigate(R.id.accountinfo)
                     true
                 }
                 R.id.item_addImg -> {
                     navController.navigate(R.id.uploadImages)
+                    true
+                }
+                R.id.search->{
+                    navController.navigate(R.id.searchProfiles)
                     true
                 }
                 else -> false

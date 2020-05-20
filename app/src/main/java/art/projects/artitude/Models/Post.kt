@@ -1,4 +1,4 @@
-package art.projects.artitude
+package art.projects.artitude.Models
 
 data class Post(
     var description: String? = "",

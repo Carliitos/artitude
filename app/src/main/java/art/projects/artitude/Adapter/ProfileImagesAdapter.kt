@@ -1,4 +1,4 @@
-package art.projects.artitude
+package art.projects.artitude.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.NonNull
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import art.projects.artitude.Models.Post
+import art.projects.artitude.R
 import com.squareup.picasso.Picasso
 
 class ProfileImagesAdapter(private val mContext: Context, posts:List<Post>,

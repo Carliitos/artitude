@@ -11,7 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
+import art.projects.artitude.Models.Post
+import art.projects.artitude.Models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_post_details.*
 class PostDetails : Fragment() {
 
     private var postId: String = ""
-    private var postObject:Post?=null
+    private var postObject: Post?=null
     private var imageUrl:String?=null
     private var postUserId:String?=null
     private var userPostname:String?=null

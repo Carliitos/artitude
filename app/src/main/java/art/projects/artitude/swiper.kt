@@ -2,7 +2,6 @@ package art.projects.artitude
 
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
@@ -10,15 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.util.Log
-import android.view.animation.AnimationUtils
-import android.widget.ArrayAdapter
-import android.widget.Toast
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
-import androidx.core.view.drawToBitmap
-import androidx.core.view.setPadding
 import androidx.navigation.Navigation
-import com.google.firebase.auth.FirebaseAuth
+import art.projects.artitude.Adapter.arrayAdapter
+import art.projects.artitude.Models.Post
+import art.projects.artitude.Models.cards
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -26,8 +21,6 @@ import com.google.firebase.database.ValueEventListener
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.plattysoft.leonids.ParticleSystem
 import kotlinx.android.synthetic.main.fragment_swiper.*
-import kotlinx.android.synthetic.main.item.*
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
@@ -36,7 +29,7 @@ import kotlin.math.absoluteValue
  * A simple [Fragment] subclass.
  */
 class swiper : Fragment() {
-    var cards:cards?=null
+    var cards: cards?=null
     var arrayAdapter: arrayAdapter? = null
 
     var MAX_PARTICLE_SIZE = 0f
@@ -63,7 +56,11 @@ class swiper : Fragment() {
 
         //rowItems = rowItems?.plus(cards("Carlos","Hellooo","https://ichef.bbci.co.uk/news/410/cpsprodpb/150EA/production/_107005268_gettyimages-611696954.jpg"))
 
-        arrayAdapter = arrayAdapter(this.requireContext(), R.layout.item, rowItems!!)
+        arrayAdapter = arrayAdapter(
+            this.requireContext(),
+            R.layout.item,
+            rowItems!!
+        )
 
         val flingContainer = frame as SwipeFlingAdapterView
 
@@ -136,7 +133,12 @@ class swiper : Fragment() {
                     for(snapshot in p0.children){
                         val post = snapshot.getValue(Post::class.java)!!
                             //(rowItems as ArrayList<Post>).add(post)
-                            val item=cards(post.user,post.description, post.imageUrl,post.postid)
+                            val item= cards(
+                                post.user,
+                                post.description,
+                                post.imageUrl,
+                                post.postid
+                            )
 
                         (rowItems as ArrayList<cards>).add(item)
                         //    rowItems = rowItems?.plus(item)

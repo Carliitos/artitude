@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background1"
     tools:context=".searchProfiles">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/searchbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/lupa"
+            android:padding="5dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/search"
+            />
+        <EditText
+            android:id="@+id/searchedittext"
+            android:layout_toRightOf="@+id/lupa"
+            android:hint="Search"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#A3FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-</FrameLayout>
+    </RelativeLayout>
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/searchrecyler"
+    android:layout_below="@+id/searchbar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    />
+</RelativeLayout>

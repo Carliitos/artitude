@@ -1,4 +1,4 @@
-package art.projects.artitude;
+package art.projects.artitude.Models;
 
 /**
  * Created by manel on 9/5/2017.
