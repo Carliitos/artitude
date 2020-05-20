@@ -52,7 +52,9 @@ class register_main : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         activity?.actionBar?.hide();
 
-
+        if(FirebaseAuth.getInstance().uid!=""){
+            Navigation.findNavController(this.view!!).navigate(R.id.swiper)
+        }
 
         registerbtn.setOnClickListener {
             if(email.text.toString().isEmpty()||password.text.toString().isEmpty()){

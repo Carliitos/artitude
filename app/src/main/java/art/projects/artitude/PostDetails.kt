@@ -3,6 +3,7 @@ package art.projects.artitude
 
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ class PostDetails : Fragment() {
     private var postObject:Post?=null
     private var imageUrl:String?=null
     private var postUserId:String?=null
+    private var userPostname:String?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,6 +78,13 @@ class PostDetails : Fragment() {
                 }
             }
         }
+        share.setOnClickListener {
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.type="text/plain"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Post by "+userPostname+" artitude.com/post/"+postId)
+            startActivity(Intent.createChooser(shareIntent,"Share post"))
+        }
 
         getPost()
 
@@ -109,6 +118,7 @@ class PostDetails : Fragment() {
                 if(p0.exists()){
                     val user = p0.getValue<User>(User::class.java)
                     username?.text = (user?.username)
+                    userPostname = (user?.username)
                     if(user?.uid != FirebaseAuth.getInstance().uid){
                         deleteButton.visibility=View.GONE
                     }else{

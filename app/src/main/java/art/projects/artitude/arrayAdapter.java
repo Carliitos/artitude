@@ -55,6 +55,7 @@ public class arrayAdapter extends ArrayAdapter<cards>{
         TextView name = (TextView) convertView.findViewById(R.id.name);
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
 
+            //name.setVisibility(View.GONE);
 
 
         name.setText(card_item.getName());

@@ -1,6 +1,7 @@
 package art.projects.artitude
 
 import android.content.Context
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -21,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         hideBottomActionBar()
+
+
+
+
         //Bottom menu
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
@@ -49,7 +54,25 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController)
 
         if(FirebaseAuth.getInstance().currentUser!=null){
-            navController.navigate(R.id.swiper)
+            //DEEP LINKING
+            val data: Uri? = intent?.data
+            if(data!=null) {
+                var params = data.pathSegments
+                var info = params.get(params.size - 1)
+                println("Los parámetros"+params[0])
+                if(params[0].equals("post")){
+                    println("Holaaaaaaaaaaaaaaa")
+                    val editor = this.applicationContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+                    editor.putString("postId",params[1])
+                    editor.apply()
+
+
+                    navController.navigate(R.id.postDetails)
+                }
+            }else{
+                navController.navigate(R.id.swiper)
+
+            }
         }
     }
 

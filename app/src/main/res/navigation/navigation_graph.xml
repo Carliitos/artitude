@@ -53,4 +53,9 @@
         android:name="art.projects.artitude.PostDetails"
         android:label="Post"
         tools:layout="@layout/fragment_post_details" />
+    <fragment
+        android:id="@+id/searchProfiles"
+        android:name="art.projects.artitude.searchProfiles"
+        android:label="fragment_search_profiles"
+        tools:layout="@layout/fragment_search_profiles" />
 </navigation>
