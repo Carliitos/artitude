@@ -52,7 +52,9 @@ class accountinfo : Fragment() {
         }else{
             userId=FirebaseAuth.getInstance().uid.toString()
         }
-
+        if(userId!=FirebaseAuth.getInstance().uid.toString()){
+            edit.visibility=View.GONE
+        }
         var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
         usersRef.addValueEventListener(object:ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {

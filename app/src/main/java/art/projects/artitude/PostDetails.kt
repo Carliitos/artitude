@@ -79,6 +79,12 @@ class PostDetails : Fragment() {
                 }
             }
         }
+        user.setOnClickListener {
+            val editor = this.context!!.getSharedPreferences("USER",Context.MODE_PRIVATE).edit()
+            editor.putString("userid",postUserId)
+            editor.apply()
+            Navigation.findNavController(this.view!!).navigate(R.id.accountinfo)
+        }
         share.setOnClickListener {
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
@@ -99,6 +105,7 @@ class PostDetails : Fragment() {
                     //println("Posts: "+postObject!!.imageUrl)
                     Picasso.get().load(postObject!!.imageUrl).into(postimage!!);
                     imageUrl = postObject!!.imageUrl
+                    postUserId=postObject!!.user
                     desc.setText(postObject!!.description)
                     getUserInfo(postObject!!.user!!)
                     tags.setText(postObject!!.tags!!)
