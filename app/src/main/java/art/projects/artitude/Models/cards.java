@@ -9,15 +9,20 @@ public class cards {
     private String name;
     private String profileImageUrl;
     private String postid;
-    public cards (String userId, String name, String profileImageUrl,String postid){
+    private String tags;
+    public cards (String userId, String name, String profileImageUrl,String postid,String tags){
         this.userId = userId;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.postid = postid;
+        this.tags=tags;
     }
     public String getPostId(){return postid;}
     public String getUserId(){
         return userId;
+    }
+    public String getTags(){
+        return tags;
     }
     public void setUserID(String userID){
         this.userId = userId;

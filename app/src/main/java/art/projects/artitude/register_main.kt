@@ -45,7 +45,7 @@ class register_main : Fragment() {
         activity?.actionBar?.hide();
 
         if(FirebaseAuth.getInstance().uid!=""){
-            Navigation.findNavController(this.view!!).navigate(R.id.swiper)
+            //Navigation.findNavController(this.view!!).navigate(R.id.swiper)
         }
 
         registerbtn.setOnClickListener {
@@ -87,15 +87,19 @@ class register_main : Fragment() {
 
         val filename = UUID.randomUUID();
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-        ref.putFile(selectedImage!!)
-            .addOnSuccessListener {
-                Log.d("Register","Successfully uploaded image")
-                ref.downloadUrl.addOnSuccessListener {
-                    it.toString()
-                    Log.d("RegisterActivity","File in: $it")
-                    saveUserToFirebase(it.toString()) //Image path in firebase
+        if(selectedImage!=null){
+            ref.putFile(selectedImage!!)
+                .addOnSuccessListener {
+                    Log.d("Register","Successfully uploaded image")
+                    ref.downloadUrl.addOnSuccessListener {
+                        it.toString()
+                        Log.d("RegisterActivity","File in: $it")
+                        saveUserToFirebase(it.toString()) //Image path in firebase
+                    }
                 }
-            }
+        }else{
+            saveUserToFirebase("")
+        }
     }
 
     private fun saveUserToFirebase(avatar:String) {

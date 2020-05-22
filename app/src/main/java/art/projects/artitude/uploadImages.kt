@@ -91,9 +91,9 @@ class uploadImages : Fragment() {
                         val postinfo = HashMap<String, Any>()
                         postinfo["postid"] = postId!!.toString()
                         postinfo["description"] = description.text.toString()
+                        postinfo["tags"]= tags.text.toString()
                         postinfo["user"] = FirebaseAuth.getInstance().uid.toString()
                         postinfo["imageUrl"] =imageUrl.toString()
-                        postinfo["tags"]= tags.text.toString()
 
                         db.child(postId).updateChildren(postinfo)
 

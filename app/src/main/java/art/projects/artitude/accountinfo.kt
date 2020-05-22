@@ -85,6 +85,7 @@ class accountinfo : Fragment() {
         }
         //Recicler
         reciclerView.setHasFixedSize(true)
+
         var linearLayoutManager:LinearLayoutManager = GridLayoutManager(context, 3)
         reciclerView.layoutManager = linearLayoutManager
 

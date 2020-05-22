@@ -58,4 +58,9 @@
         android:name="art.projects.artitude.searchProfiles"
         android:label="fragment_search_profiles"
         tools:layout="@layout/fragment_search_profiles" />
+    <fragment
+        android:id="@+id/trends"
+        android:name="art.projects.artitude.trends"
+        android:label="Trending"
+        tools:layout="@layout/fragment_trends" />
 </navigation>

@@ -14,6 +14,7 @@ import androidx.navigation.Navigation
 import art.projects.artitude.Adapter.arrayAdapter
 import art.projects.artitude.Models.Post
 import art.projects.artitude.Models.cards
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -31,7 +32,7 @@ import kotlin.math.absoluteValue
 class swiper : Fragment() {
     var cards: cards?=null
     var arrayAdapter: arrayAdapter? = null
-
+    var userId:String?=null
     var MAX_PARTICLE_SIZE = 0f
     var MIN_PARTICLE_SIZE = 0f
     override fun onCreateView(
@@ -50,6 +51,7 @@ class swiper : Fragment() {
         (activity as MainActivity).showBottomActionBar()
         (activity as MainActivity).showActionBar()
         screenSize()
+        userId =FirebaseAuth.getInstance().uid
         getPosts()
 
         rowItems = ArrayList<cards>()
@@ -64,6 +66,7 @@ class swiper : Fragment() {
 
         val flingContainer = frame as SwipeFlingAdapterView
 
+        val db = FirebaseDatabase.getInstance().reference
 
         //set the listener and the adapter
         flingContainer.setAdapter(arrayAdapter);
@@ -93,21 +96,51 @@ class swiper : Fragment() {
 
             override fun onLeftCardExit(dataObject: Any) {
                 imagesss.alpha=0f
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
-                //Toast.makeText(this@MyActivity, "Left!", Toast.LENGTH_SHORT).show()
+                val postinfo = HashMap<String, Any>()
+                postinfo["description"] = (dataObject as cards).name.toString()
+
+                postinfo["tags"]= dataObject.tags.toString()
+                //db.child("Rated").child(userId!!).child("disliked").child(dataObject.postId!!).updateChildren(postinfo)
+                db.child("Posts").child(dataObject.postId!!).child("rated").child("disliked").child(userId!!).setValue(true)
             }
 
             override fun onRightCardExit(dataObject: Any) {
                 startParticles()
                 imagesss.alpha=0f
-                //Toast.makeText(this@MyActivity, "Right!", Toast.LENGTH_SHORT).show()
+                val postinfo = HashMap<String, Any>()
+                postinfo["description"] = (dataObject as cards).name.toString()
+                postinfo["tags"]= dataObject.tags.toString()
+                //db.child("Rated").child(userId!!).child("liked").child(dataObject.postId!!).updateChildren(postinfo)
+                db.child("Posts").child(dataObject.postId!!).child("rated").child("liked").child(userId!!).setValue(true)
+
+                //Increases the times that it has been liked
+                val increment = db.child("Posts").child(dataObject.postId!!).child("timesliked")
+                increment.addListenerForSingleValueEvent(object: ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if(p0.exists()&&p0.getValue(Int::class.java)!=null){
+                            val amount = p0.getValue(Int::class.java)
+                            println("THE VALUE IS: "+amount)
+                            db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(amount!! +1)
+                        }else{
+                            db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(1)
+                        }
+
+                    }
+
+
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+                })
             }
+
 
             override fun onAdapterAboutToEmpty(itemsInAdapter: Int) {
                 // Ask for more data here
                 //rowItems!!.add("XML " + itemsInAdapter)
+                //rowItems=ArrayList<cards>()
+                //getPosts()
+                //rowItems=ArrayList<cards>()
                 arrayAdapter!!.notifyDataSetChanged()
                 Log.d("LIST", "notified")
                 //i++
@@ -126,28 +159,33 @@ class swiper : Fragment() {
         })
     }
     private fun getPosts(){
-        val posts = FirebaseDatabase.getInstance().reference.child("Posts")
+        rowItems=ArrayList<cards>()
+        val posts = FirebaseDatabase.getInstance().reference.child("Posts").limitToFirst(50)
         posts.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(snapshot in p0.children){
-                        val post = snapshot.getValue(Post::class.java)!!
-                            //(rowItems as ArrayList<Post>).add(post)
+                        if(!snapshot.child("rated").child("liked").hasChild((userId!!))&&!snapshot.child("rated").child("disliked").hasChild((userId!!))){
+                            val post = snapshot.getValue(Post::class.java)!!
+                                //(rowItems as ArrayList<Post>).add(post)
                             val item= cards(
-                                post.user,
-                                post.description,
-                                post.imageUrl,
-                                post.postid
-                            )
+                                    post.user,
+                                    post.description,
+                                    post.imageUrl,
+                                    post.postid,
+                                    post.tags
 
-                        (rowItems as ArrayList<cards>).add(item)
-                        //    rowItems = rowItems?.plus(item)
-                        //Collections.reverse(postList)
-                        //imageAdapter!!.notifyDataSetChanged()
+                                )
+
+                            (rowItems as ArrayList<cards>).add(item)
+
+                        }
+
                     }
-                            arrayAdapter!!.notifyDataSetChanged()
                 }
+                            arrayAdapter!!.notifyDataSetChanged()
             }
+
 
             override fun onCancelled(p0: DatabaseError) {
 
