@@ -65,6 +65,7 @@
             android:layout_margin="10dp"
             android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10"
@@ -89,6 +90,7 @@
             android:layout_margin="10dp"
             android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/liked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10"
@@ -99,7 +101,7 @@
                 android:gravity="center"
                 android:layout_width="@dimen/maxFollowSize"
                 android:layout_height="wrap_content"
-                android:text="Following"
+                android:text="Liked"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp"
                 android:ellipsize="end"
@@ -114,6 +116,8 @@
             android:layout_margin="10dp"
             android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/postnumber"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10"
@@ -123,7 +127,8 @@
             <TextView
                 android:layout_width="@dimen/maxFollowSize"
                 android:layout_height="wrap_content"
-                android:text="Followers"
+                android:text="Posts"
+                android:gravity="center"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp"
                 android:ellipsize="end"

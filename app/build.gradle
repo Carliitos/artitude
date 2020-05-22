@@ -25,7 +25,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -59,4 +60,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'com.plattysoft.leonids:LeonidsLib:1.3.2'
+
+    //Stars
+    implementation 'com.sofakingforever.libraries:animated-stars-android:1.1.4@aar'
 }

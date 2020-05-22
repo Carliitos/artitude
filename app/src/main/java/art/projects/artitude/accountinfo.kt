@@ -68,7 +68,7 @@ class accountinfo : Fragment() {
                         if(user?.bio!=""){
                             bios?.text = user?.bio
                         }else{
-                            bios.visibility=View.GONE
+                            bios?.visibility=View.GONE
                         }
 
                     }
@@ -104,7 +104,9 @@ class accountinfo : Fragment() {
 
     private fun getUserPictures(){
         val posts = FirebaseDatabase.getInstance().reference.child("Posts")
-        posts.addValueEventListener(object: ValueEventListener{
+        posts.addListenerForSingleValueEvent(object: ValueEventListener{
+            var totalLikes = 0;
+            var totalPosts = 0
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     (postList as ArrayList<Post>).clear()
@@ -112,11 +114,27 @@ class accountinfo : Fragment() {
                         val post = snapshot.getValue(Post::class.java)!!
                         if(post.user.equals(userId)){
                             (postList as ArrayList<Post>).add(post)
+                            totalLikes += post.timesliked!!
+                            imageAdapter?.notifyDataSetChanged()
+                            totalPosts++;
                         }
-                        Collections.reverse(postList)
-                        imageAdapter!!.notifyDataSetChanged()
+                        Collections.reverse(postList!!)
                     }
                 }
+                postnumber?.text=totalPosts.toString()
+                likes?.text =totalLikes.toString()
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+        //Gets the total liked images
+        FirebaseDatabase.getInstance().reference.child("users").child(userId!!).child("liked").addListenerForSingleValueEvent(object: ValueEventListener{
+
+            override fun onDataChange(p0: DataSnapshot) {
+                liked?.text = p0.childrenCount.toString()
+
             }
 
             override fun onCancelled(p0: DatabaseError) {

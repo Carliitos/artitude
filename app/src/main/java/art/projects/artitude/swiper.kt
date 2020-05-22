@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ListView
 import androidx.navigation.Navigation
 import art.projects.artitude.Adapter.arrayAdapter
@@ -44,6 +46,7 @@ class swiper : Fragment() {
     }
     var listview:ListView?=null
     var rowItems:List<cards>?=null
+    var animation:Animation?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val context = this.requireContext()
@@ -52,7 +55,10 @@ class swiper : Fragment() {
         (activity as MainActivity).showActionBar()
         screenSize()
         userId =FirebaseAuth.getInstance().uid
+        //Background fade in animation
+        animation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_enter)
         getPosts()
+
 
         rowItems = ArrayList<cards>()
 
@@ -110,21 +116,19 @@ class swiper : Fragment() {
                 val postinfo = HashMap<String, Any>()
                 postinfo["description"] = (dataObject as cards).name.toString()
                 postinfo["tags"]= dataObject.tags.toString()
-                //db.child("Rated").child(userId!!).child("liked").child(dataObject.postId!!).updateChildren(postinfo)
-                db.child("Posts").child(dataObject.postId!!).child("rated").child("liked").child(userId!!).setValue(true)
 
+                db.child("Posts").child(dataObject.postId!!).child("rated").child("liked").child(userId!!).setValue(true)
+                db.child("users").child(userId!!).child("liked").child(dataObject.postId!!).setValue(postinfo)
                 //Increases the times that it has been liked
                 val increment = db.child("Posts").child(dataObject.postId!!).child("timesliked")
                 increment.addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
                         if(p0.exists()&&p0.getValue(Int::class.java)!=null){
                             val amount = p0.getValue(Int::class.java)
-                            println("THE VALUE IS: "+amount)
                             db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(amount!! +1)
                         }else{
                             db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(1)
                         }
-
                     }
 
 
@@ -187,8 +191,11 @@ class swiper : Fragment() {
                             if(up2date!=null){
                                 if(rowItems!!.isEmpty()){
                                     up2date!!.visibility=View.VISIBLE
+                                    stars.startAnimation(animation)
+                                    stars.visibility=View.VISIBLE
                                 }else{
                                     up2date!!.visibility=View.GONE
+                                    stars.visibility=View.INVISIBLE
                                 }
 
                             }
@@ -253,6 +260,14 @@ class swiper : Fragment() {
 
         }
     }
+    override fun onStart() {
+        super.onStart()
+        stars.onStart()
+    }
 
+    override fun onStop() {
+        stars.onStop()
+        super.onStop()
+    }
 
 }

@@ -4,12 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     tools:context=".swiper">
+
+    <com.sofakingforever.stars.AnimatedStarsView
+        android:id="@+id/stars"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:starsView_bigStarThreshold="10dp"
+        app:starsView_meteoritesColors="@array/meteorites_colors"
+        app:starsView_meteoritesEnabled="true"
+        app:starsView_meteoritesInterval="2000"
+        app:starsView_maxStarSize="16dp"
+        app:starsView_minStarSize="1dp"
+        app:starsView_starColors="@array/star_colors_small"
+        app:starsView_starCount="50" />
 
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/frame"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:rotation_degrees="15.5"

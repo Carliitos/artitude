@@ -126,7 +126,7 @@ class PostDetails : Fragment() {
     }
     private fun getUserInfo(userId:String){
         var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId)
-        usersRef.addValueEventListener(object:ValueEventListener{
+        usersRef.addListenerForSingleValueEvent(object:ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     val user = p0.getValue<User>(User::class.java)
