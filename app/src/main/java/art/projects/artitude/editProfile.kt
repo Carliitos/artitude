@@ -3,6 +3,7 @@ package art.projects.artitude
 
 import android.app.Activity.RESULT_OK
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -99,6 +100,21 @@ class editProfile : Fragment() {
             (activity as MainActivity).hideActionBar()
             Navigation.findNavController(view).navigate(R.id.login)
 
+        }
+        val preferences = context?.getSharedPreferences("STETIC", Context.MODE_PRIVATE)
+        if(preferences!=null){
+            nightmode.isChecked = preferences.getBoolean("darkmode",false)
+
+        }
+        nightmode.setOnCheckedChangeListener { _, isChecked ->
+            val editor = this.context!!.getSharedPreferences("STETIC", Context.MODE_PRIVATE).edit()
+            if(isChecked){
+                editor.putBoolean("darkmode",true)
+            }else{
+                editor.putBoolean("darkmode",false)
+            }
+            editor.apply()
+            (activity as MainActivity).checkTheme()
         }
     }
 

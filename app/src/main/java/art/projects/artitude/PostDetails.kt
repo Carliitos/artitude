@@ -98,7 +98,7 @@ class PostDetails : Fragment() {
     }
     private fun getPost(){
         val db = FirebaseDatabase.getInstance().reference.child("Posts").child(postId)
-        db.addValueEventListener(object: ValueEventListener{
+        db.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                 postObject = p0.getValue<Post>(Post::class.java)
@@ -106,9 +106,14 @@ class PostDetails : Fragment() {
                     Picasso.get().load(postObject!!.imageUrl).into(postimage!!);
                     imageUrl = postObject!!.imageUrl
                     postUserId=postObject!!.user
-                    desc.setText(postObject!!.description)
+                    desc.text = postObject!!.description
                     getUserInfo(postObject!!.user!!)
-                    tags.setText(postObject!!.tags!!)
+                    tags.text = postObject!!.tags!!
+                    if(postObject!!.timesliked==1){
+                        postlikes.text = postObject!!.timesliked!!.toString()+" like"
+                    }else{
+                        postlikes.text = postObject!!.timesliked!!.toString()+" likes"
+                    }
                 }
 
 

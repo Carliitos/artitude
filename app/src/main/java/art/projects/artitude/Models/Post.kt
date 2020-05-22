@@ -5,6 +5,6 @@ data class Post(
     var imageUrl: String? = "",
     var postid: String? = "",
     var tags: String? = "",
-    var timesliked: Int? = null,
+    var timesliked: Int? = 0,
     var user: String? = ""
 )

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background1"
     tools:context=".editProfile">
     <ScrollView
         android:layout_width="match_parent"
@@ -79,6 +78,7 @@
             android:inputType="textMultiLine" />
         <Button
             android:id="@+id/update"
+            android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/loginbtn"
@@ -86,6 +86,15 @@
 
             android:text="Save Changes"
             />
+        <Switch
+            android:id="@+id/nightmode"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Dark Mode         " />
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
@@ -96,6 +105,7 @@
             android:text="Log Out"
             android:alpha="0.5"
             />
+
         <TextView
             android:id="@+id/errorText"
             android:layout_width="wrap_content"
@@ -106,6 +116,8 @@
             android:textColor="#FFFFFF"
             android:layout_marginTop="10dp"
             />
+
+
 
     </LinearLayout>
     </ScrollView>

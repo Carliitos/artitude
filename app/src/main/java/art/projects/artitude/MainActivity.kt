@@ -86,12 +86,28 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
+        checkTheme()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
+    public fun checkTheme() {
+        //Checks the userprefs so it can choose the background
+        val preferences = this.getSharedPreferences("STETIC", Context.MODE_PRIVATE)
+        if(preferences!=null){
+            if(preferences.getBoolean("darkmode",false)){
+                background.background=getDrawable(R.drawable.darkbackground)
+            }else{
+                background.background=getDrawable(R.drawable.background1)
+
+            }
+
+        }
     }
+
+//    override fun onSupportNavigateUp(): Boolean {
+//        onBackPressed()
+//        return false
+//    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
         menuInflater.inflate(R.menu.settingsmenu, menu)
