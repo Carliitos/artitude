@@ -182,7 +182,16 @@ class swiper : Fragment() {
                         }
 
                     }
+
                 }
+                            if(up2date!=null){
+                                if(rowItems!!.isEmpty()){
+                                    up2date!!.visibility=View.VISIBLE
+                                }else{
+                                    up2date!!.visibility=View.GONE
+                                }
+
+                            }
                             arrayAdapter!!.notifyDataSetChanged()
             }
 

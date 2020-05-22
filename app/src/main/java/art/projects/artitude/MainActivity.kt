@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         //Bottom menu
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
+                    showActionBar()
             when(item.itemId) {
                 R.id.item_home -> {
                     navController.navigate(R.id.swiper)
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.search->{
                     navController.navigate(R.id.searchProfiles)
+                    true
+                }
+                R.id.item_trends->{
+                    navController.navigate(R.id.trends)
                     true
                 }
                 else -> false

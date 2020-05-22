@@ -35,6 +35,7 @@ class searchProfiles : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         searchrecyler.setHasFixedSize(true)
         searchrecyler.layoutManager = LinearLayoutManager(context)
 

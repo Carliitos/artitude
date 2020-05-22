@@ -92,6 +92,7 @@ class uploadImages : Fragment() {
                         postinfo["postid"] = postId!!.toString()
                         postinfo["description"] = description.text.toString()
                         postinfo["tags"]= tags.text.toString()
+                        postinfo["timesliked"]=0
                         postinfo["user"] = FirebaseAuth.getInstance().uid.toString()
                         postinfo["imageUrl"] =imageUrl.toString()
 

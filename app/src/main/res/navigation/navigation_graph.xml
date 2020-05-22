@@ -56,7 +56,7 @@
     <fragment
         android:id="@+id/searchProfiles"
         android:name="art.projects.artitude.searchProfiles"
-        android:label="fragment_search_profiles"
+        android:label="Search"
         tools:layout="@layout/fragment_search_profiles" />
     <fragment
         android:id="@+id/trends"

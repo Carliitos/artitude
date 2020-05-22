@@ -6,6 +6,11 @@
     android:background="@drawable/background1"
     tools:context=".trends">
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trendsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        />
 
 </RelativeLayout>
