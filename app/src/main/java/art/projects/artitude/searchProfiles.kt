@@ -96,7 +96,7 @@ class searchProfiles : Fragment() {
         val users = FirebaseDatabase.getInstance().reference.child("users")
         users.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
-                if(searchedittext.text.toString()!=""){
+                if(searchedittext.text.toString()!=""&&searchedittext!=null){
                     mUser?.clear()
                     for(snapshot in p0.children){
                         val user = snapshot.getValue(User::class.java)
@@ -112,5 +112,13 @@ class searchProfiles : Fragment() {
             }
         })
     }
+    override fun onStart() {
+        super.onStart()
+        stars.onStart()
+    }
 
+    override fun onStop() {
+        stars.onStop()
+        super.onStop()
+    }
 }

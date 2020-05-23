@@ -57,122 +57,71 @@ class swiper : Fragment() {
         userId =FirebaseAuth.getInstance().uid
         //Background fade in animation
         animation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_enter)
-        getPosts()
+        getTags()
 
 
         rowItems = ArrayList<cards>()
 
+        val preferences = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
+        if(!preferences.getBoolean("tutorial",false)){
+            var timesClicked = 0
+            tutorial.visibility=View.VISIBLE
+            tutorial.setOnClickListener {
+                timesClicked++
+                image.setImageResource(R.drawable.left)
+                if(timesClicked==2){
+                    tutorial.visibility=View.GONE
+                    val editor = this.context!!.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+                    editor.putBoolean("tutorial",true)
+                    editor.apply()
+                }
+            }
+        }
+
         //rowItems = rowItems?.plus(cards("Carlos","Hellooo","https://ichef.bbci.co.uk/news/410/cpsprodpb/150EA/production/_107005268_gettyimages-611696954.jpg"))
 
-        arrayAdapter = arrayAdapter(
-            this.requireContext(),
-            R.layout.item,
-            rowItems!!
-        )
-
-        val flingContainer = frame as SwipeFlingAdapterView
-
-        val db = FirebaseDatabase.getInstance().reference
-
-        //set the listener and the adapter
-        flingContainer.setAdapter(arrayAdapter);
-        flingContainer.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
-            override fun onScroll(p0: Float) {
-                println(p0)
-                if(p0>0){
-                    imagesss.setImageResource(R.drawable.heart)
-                }else{
-                    imagesss.setImageResource(R.drawable.no)
-                }
-                imagesss.alpha = (p0.absoluteValue)-0.1f
-
-                //imagesss.layoutParams.width = (600*p0).toInt()
-                //imagesss.layoutParams.height = (600*p0).toInt()
-                //imagesss.layoutParams.width = (p0*100).toInt()
-                //println((p0*100).toInt())
-            }
-
-            override fun removeFirstObjectInAdapter() {
-                // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                Log.d("LIST", "removed object!")
-                (rowItems as ArrayList<cards>).removeAt(0)
-
-                arrayAdapter!!.notifyDataSetChanged()
-            }
-
-            override fun onLeftCardExit(dataObject: Any) {
-                imagesss.alpha=0f
-                val postinfo = HashMap<String, Any>()
-                postinfo["description"] = (dataObject as cards).name.toString()
-
-                postinfo["tags"]= dataObject.tags.toString()
-                //db.child("Rated").child(userId!!).child("disliked").child(dataObject.postId!!).updateChildren(postinfo)
-                db.child("Posts").child(dataObject.postId!!).child("rated").child("disliked").child(userId!!).setValue(true)
-            }
-
-            override fun onRightCardExit(dataObject: Any) {
-                startParticles()
-                imagesss.alpha=0f
-                val postinfo = HashMap<String, Any>()
-                postinfo["description"] = (dataObject as cards).name.toString()
-                postinfo["tags"]= dataObject.tags.toString()
-
-                db.child("Posts").child(dataObject.postId!!).child("rated").child("liked").child(userId!!).setValue(true)
-                db.child("users").child(userId!!).child("liked").child(dataObject.postId!!).setValue(postinfo)
-                //Increases the times that it has been liked
-                val increment = db.child("Posts").child(dataObject.postId!!).child("timesliked")
-                increment.addListenerForSingleValueEvent(object: ValueEventListener {
-                    override fun onDataChange(p0: DataSnapshot) {
-                        if(p0.exists()&&p0.getValue(Int::class.java)!=null){
-                            val amount = p0.getValue(Int::class.java)
-                            db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(amount!! +1)
-                        }else{
-                            db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(1)
-                        }
-                    }
-
-
-                    override fun onCancelled(p0: DatabaseError) {
-
-                    }
-                })
-            }
-
-
-            override fun onAdapterAboutToEmpty(itemsInAdapter: Int) {
-                // Ask for more data here
-                //rowItems!!.add("XML " + itemsInAdapter)
-                //rowItems=ArrayList<cards>()
-                //getPosts()
-                //rowItems=ArrayList<cards>()
-                arrayAdapter!!.notifyDataSetChanged()
-                Log.d("LIST", "notified")
-                //i++
-            }
-
-        })
-        // Optionally add an OnItemClickListener
-        flingContainer.setOnItemClickListener(object : SwipeFlingAdapterView.OnItemClickListener {
-            override fun onItemClicked(itemPosition: Int, dataObject: Any) {
-
-                val editor = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit()
-                editor.putString("postId",(dataObject as cards).postId)
-                editor.apply()
-                Navigation.findNavController(view!!).navigate(R.id.postDetails)
-            }
-        })
     }
+    var tags:ArrayList<String>?=null
     private fun getPosts(){
         rowItems=ArrayList<cards>()
-        val posts = FirebaseDatabase.getInstance().reference.child("Posts").limitToFirst(50)
-        posts.addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(snapshot in p0.children){
-                        if(!snapshot.child("rated").child("liked").hasChild((userId!!))&&!snapshot.child("rated").child("disliked").hasChild((userId!!))){
-                            val post = snapshot.getValue(Post::class.java)!!
+
+
+        for(sigletag in tags!!){
+
+            val posts = FirebaseDatabase.getInstance().reference.child("Posts").orderByChild("tags").startAt(sigletag).endAt(sigletag+"\uf8ff").limitToFirst(2);
+            posts.addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if(p0.exists()){
+                        for(snapshot in p0.children){
+                            if(!snapshot.child("rated").child("liked").hasChild((userId!!))&&!snapshot.child("rated").child("disliked").hasChild((userId!!))){
+                                val post = snapshot.getValue(Post::class.java)!!
+                                    //(rowItems as ArrayList<Post>).add(post)
+                                val item= cards(
+                                        post.user,
+                                        post.description,
+                                        post.imageUrl,
+                                        post.postid,
+                                        post.tags
+                                    )
+                                (rowItems as ArrayList<cards>).add(item)
+                            }
+                        }
+                    }
+                }
+                override fun onCancelled(p0: DatabaseError) {
+                }
+            })
+        }
+
+            val postsnotags = FirebaseDatabase.getInstance().reference.child("Posts").limitToFirst(20);
+            postsnotags.addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if(p0.exists()){
+                        for(snapshot in p0.children){
+                            if(!snapshot.child("rated").child("liked").hasChild((userId!!))&&!snapshot.child("rated").child("disliked").hasChild((userId!!))){
+                                val post = snapshot.getValue(Post::class.java)!!
                                 //(rowItems as ArrayList<Post>).add(post)
-                            val item= cards(
+                                val item= cards(
                                     post.user,
                                     post.description,
                                     post.imageUrl,
@@ -180,34 +129,61 @@ class swiper : Fragment() {
                                     post.tags
 
                                 )
-
-                            (rowItems as ArrayList<cards>).add(item)
-
+                                if(!rowItems!!.contains(item)){
+                                    (rowItems as ArrayList<cards>).add(item)
+                                }
+                            }
                         }
+                    }
+                    rowItems!!.reversed()
+                    if(up2date!=null){
+                        if(rowItems!!.isEmpty()){
+                            up2date!!.visibility=View.VISIBLE
+                            stars.startAnimation(animation)
+                            stars.visibility=View.VISIBLE
+                        }else{
+                            up2date!!.visibility=View.GONE
+                            stars.visibility=View.INVISIBLE
+                        }
+                    }
+                    arrayAdapter?.notifyDataSetChanged()
+                }
+                override fun onCancelled(p0: DatabaseError) {
+                }
+            })
+        println("Thee array: "+rowItems)
+        startAdapter()
 
+
+    }
+
+    private fun getTags() {
+
+        tags = ArrayList()
+
+        //Gets the liked tags
+
+        FirebaseDatabase.getInstance().reference.child("users").child(userId!!).child("liked").addListenerForSingleValueEvent(object: ValueEventListener{
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(snapshot in p0.children){
+                        val post = snapshot.getValue(Post::class.java)!!
+                        tags?.add(post.tags.toString())
                     }
 
                 }
-                            if(up2date!=null){
-                                if(rowItems!!.isEmpty()){
-                                    up2date!!.visibility=View.VISIBLE
-                                    stars.startAnimation(animation)
-                                    stars.visibility=View.VISIBLE
-                                }else{
-                                    up2date!!.visibility=View.GONE
-                                    stars.visibility=View.INVISIBLE
-                                }
+                getPosts()
 
-                            }
-                            arrayAdapter!!.notifyDataSetChanged()
             }
-
 
             override fun onCancelled(p0: DatabaseError) {
 
             }
         })
+
     }
+
     private fun startParticles(){
         try {
             ParticleSystem(this.activity, 40, R.drawable.particleheart, 3000)
@@ -269,5 +245,102 @@ class swiper : Fragment() {
         stars.onStop()
         super.onStop()
     }
+    private fun startAdapter(){
+        arrayAdapter = arrayAdapter(
+            this.requireContext(),
+            R.layout.item,
+            rowItems!!
+        )
+
+        val flingContainer = frame as SwipeFlingAdapterView
+
+        val db = FirebaseDatabase.getInstance().reference
+
+        //set the listener and the startAdapter
+        flingContainer.adapter = arrayAdapter;
+        flingContainer.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
+            override fun onScroll(p0: Float) {
+                println(p0)
+                if(p0>0){
+                    imagesss.setImageResource(R.drawable.heart)
+                }else{
+                    imagesss.setImageResource(R.drawable.no)
+                }
+                imagesss.alpha = (p0.absoluteValue)-0.1f
+
+            }
+
+            override fun removeFirstObjectInAdapter() {
+                // this is the simplest way to delete an object from the Adapter (/AdapterView)
+                Log.d("LIST", "removed object!")
+                (rowItems as ArrayList<cards>).removeAt(0)
+
+                arrayAdapter!!.notifyDataSetChanged()
+            }
+
+            override fun onLeftCardExit(dataObject: Any) {
+                imagesss.alpha=0f
+                val postinfo = HashMap<String, Any>()
+                postinfo["description"] = (dataObject as cards).name.toString()
+
+                postinfo["tags"]= dataObject.tags.toString()
+                //db.child("Rated").child(userId!!).child("disliked").child(dataObject.postId!!).updateChildren(postinfo)
+                db.child("Posts").child(dataObject.postId!!).child("rated").child("disliked").child(userId!!).setValue(true)
+            }
+
+            override fun onRightCardExit(dataObject: Any) {
+                startParticles()
+                imagesss.alpha=0f
+                val postinfo = HashMap<String, Any>()
+                postinfo["description"] = (dataObject as cards).name.toString()
+                postinfo["tags"]= dataObject.tags.toString()
+
+                db.child("Posts").child(dataObject.postId!!).child("rated").child("liked").child(userId!!).setValue(true)
+                db.child("users").child(userId!!).child("liked").child(dataObject.postId!!).setValue(postinfo)
+                db.child("users").child(userId!!).child("likedTags").setValue(dataObject.tags)
+                //Increases the times that it has been liked
+                val increment = db.child("Posts").child(dataObject.postId!!).child("timesliked")
+                increment.addListenerForSingleValueEvent(object: ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if(p0.exists()&&p0.getValue(Int::class.java)!=null){
+                            val amount = p0.getValue(Int::class.java)
+                            db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(amount!! +1)
+                        }else{
+                            db.child("Posts").child(dataObject.postId!!).child("timesliked").setValue(1)
+                        }
+                    }
+
+
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+                })
+            }
+
+
+            override fun onAdapterAboutToEmpty(itemsInAdapter: Int) {
+                // Ask for more data here
+                //rowItems!!.add("XML " + itemsInAdapter)
+                //rowItems=ArrayList<cards>()
+                //getPosts()
+                //rowItems=ArrayList<cards>()
+                arrayAdapter!!.notifyDataSetChanged()
+                Log.d("LIST", "notified")
+                //i++
+            }
+
+        })
+        // Optionally add an OnItemClickListener
+        flingContainer.setOnItemClickListener(object : SwipeFlingAdapterView.OnItemClickListener {
+            override fun onItemClicked(itemPosition: Int, dataObject: Any) {
+
+                val editor = context!!.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit()
+                editor.putString("postId",(dataObject as cards).postId)
+                editor.apply()
+                Navigation.findNavController(view!!).navigate(R.id.postDetails)
+            }
+        })
+    }
+
 
 }

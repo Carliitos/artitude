@@ -84,6 +84,16 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/editext"
         android:inputType="textPassword"/>
+        <Switch
+            android:id="@+id/nightmode"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Dark Mode         " />
         <Button
             android:id="@+id/registerbtn"
             android:layout_width="match_parent"
@@ -92,6 +102,7 @@
             android:textColor="#FFFFFF"
             android:text="REGISTER"
             />
+
     <TextView
         android:id="@+id/errorText"
         android:layout_width="wrap_content"

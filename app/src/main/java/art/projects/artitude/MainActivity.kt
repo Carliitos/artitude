@@ -1,5 +1,6 @@
 package art.projects.artitude
 
+import android.app.Fragment
 import android.content.Context
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.item_addImg -> {
+
                     navController.navigate(R.id.uploadImages)
                     true
                 }

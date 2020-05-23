@@ -12,6 +12,7 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import android.R.attr.data
 import android.app.Activity.RESULT_OK
 import android.app.ProgressDialog
+import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import androidx.navigation.Navigation
@@ -45,9 +46,11 @@ class uploadImages : Fragment() {
     }
     var selectedImage: Uri? = null;
     var storageRef:StorageReference? = null;
+    var mContext:Context?=null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        mContext=this.context
         storageRef = FirebaseStorage.getInstance().reference.child("PostImages")
 
         CropImage.activity()
@@ -84,6 +87,7 @@ class uploadImages : Fragment() {
 
                 }).addOnCompleteListener (OnCompleteListener {
                     //When the image has been uploaded
+                    var userId=FirebaseAuth.getInstance().uid.toString()
                     if(it.isSuccessful){
                         val imageUrl = it.result
                         val db = FirebaseDatabase.getInstance().reference.child("Posts")
@@ -91,14 +95,19 @@ class uploadImages : Fragment() {
                         val postinfo = HashMap<String, Any>()
                         postinfo["postid"] = postId!!.toString()
                         postinfo["description"] = description.text.toString()
-                        postinfo["tags"]= tags.text.toString()
+                        postinfo["tags"]= tags.text.toString().toLowerCase()
                         postinfo["timesliked"]=0
-                        postinfo["user"] = FirebaseAuth.getInstance().uid.toString()
+                        postinfo["user"] = userId
                         postinfo["imageUrl"] =imageUrl.toString()
 
                         db.child(postId).updateChildren(postinfo)
 
                         progressDialog.dismiss()
+
+
+                        val editor = mContext!!.getSharedPreferences("USER", Context.MODE_PRIVATE).edit()
+                        editor.putString("userid",userId)
+                        editor.apply()
                         Navigation.findNavController(this.view!!).navigate(R.id.accountinfo)
                     }
                 })

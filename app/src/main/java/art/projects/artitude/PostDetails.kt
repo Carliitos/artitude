@@ -45,10 +45,13 @@ class PostDetails : Fragment() {
         if(preferences!=null){
             postId = preferences.getString("postId","none")!!
         }
+        var btnAnimation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_enter)
+
         val animation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_open_enter)
         animation.duration=500
         postimage.startAnimation(animation)
         deleteButton.setOnClickListener {
+            deleteButton.startAnimation(btnAnimation)
             val animation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_enter)
             val animationout = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_exit)
             deleteWarning.startAnimation(animation)
@@ -86,6 +89,7 @@ class PostDetails : Fragment() {
             Navigation.findNavController(this.view!!).navigate(R.id.accountinfo)
         }
         share.setOnClickListener {
+            share.startAnimation(animation)
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type="text/plain"

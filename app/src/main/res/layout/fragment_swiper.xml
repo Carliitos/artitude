@@ -47,5 +47,22 @@
         android:textSize="20dp"
         android:visibility="gone"
         />
+    <RelativeLayout
+        android:id="@+id/tutorial"
+        android:clickable="true"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B0000000"
+        android:focusable="true">
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/right"
+            android:layout_margin="60dp"
+            />
+    </RelativeLayout>
 
 </RelativeLayout>
