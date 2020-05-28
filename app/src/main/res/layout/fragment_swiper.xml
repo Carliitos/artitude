@@ -27,7 +27,7 @@
         app:rotation_degrees="15.5"
         tools:context=".MyActivity" />
     <ImageView
-        android:id="@+id/imagesss"
+        android:id="@+id/likedislikeimg"
         android:layout_centerInParent="true"
         android:alpha="0"
         android:layout_margin="120dp"

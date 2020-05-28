@@ -51,16 +51,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'com.google.firebase:firebase-database:19.3.0'
-
+    //Circle Image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Swipe cards system
     implementation("com.lorentzos.swipecards:library:1.0.9")
-
     implementation 'com.android.support:cardview-v7:28.0.0'
+
     implementation 'com.google.android.material:material:1.2.0-alpha06'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'com.plattysoft.leonids:LeonidsLib:1.3.2'
 
-    //Stars
+    //Stars background
     implementation 'com.sofakingforever.libraries:animated-stars-android:1.1.4@aar'
 }

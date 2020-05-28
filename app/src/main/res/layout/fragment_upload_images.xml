@@ -10,11 +10,13 @@
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:layout_above="@+id/options"
         android:layout_marginBottom="20dp"
         />
     <LinearLayout
+        android:id="@+id/options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -46,7 +48,7 @@
         android:background="@drawable/editext"
         android:inputType="textCapWords"/>
     <Button
-        android:id="@+id/registerbtn"
+        android:id="@+id/uploadbtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/loginbtn"

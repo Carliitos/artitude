@@ -43,22 +43,23 @@ class trends : Fragment() {
 
     }
     private fun getTopPosts(){
-        val posts = FirebaseDatabase.getInstance().reference.child("Posts").orderByChild("timesliked")
+        val posts =
+            FirebaseDatabase.getInstance().reference
+                .child("Posts")
+                .orderByChild("timesliked")
+                .limitToLast(10)
         posts.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-
-                    mPost?.clear()
-                    for(snapshot in p0.children){
-                        val user = snapshot.getValue(Post::class.java)
-                        if(user!=null){
-                            mPost?.add(user)
-                        }
+                mPost?.clear()
+                for(snapshot in p0.children){
+                    val user = snapshot.getValue(Post::class.java)
+                    if(user!=null){
+                        mPost?.add(user)
                     }
-                    mPost!!.reverse()
-                    userAdapter?.notifyDataSetChanged()
-
+                }
+                mPost!!.reverse()
+                userAdapter?.notifyDataSetChanged()
             }
-
             override fun onCancelled(p0: DatabaseError) {
             }
         })

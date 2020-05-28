@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import android.R.attr.data
 import android.app.Activity.RESULT_OK
 import android.app.ProgressDialog
 import android.content.Context
@@ -23,18 +22,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_upload_images.*
-import org.jetbrains.annotations.NotNull
 import java.util.*
 import kotlin.collections.HashMap
 
 
-/**
- * A simple [Fragment] subclass.
- */
+
 class uploadImages : Fragment() {
 
     override fun onCreateView(
@@ -58,7 +53,7 @@ class uploadImages : Fragment() {
             .setAspectRatio(1, 1)
             .start(context!!, this);
 
-        registerbtn.setOnClickListener {
+        uploadbtn.setOnClickListener {
             uploadImage()
         }
     }
@@ -73,9 +68,8 @@ class uploadImages : Fragment() {
                 progressDialog.show()
 
                 val filename = UUID.randomUUID();
-                val fileRef = storageRef!!.child(filename.toString()+".jpg")
-
-                var uploadTask = fileRef.putFile(selectedImage!!)
+                val fileRef = storageRef!!.child("$filename.jpg")
+                val uploadTask = fileRef.putFile(selectedImage!!)
 
                 uploadTask.continueWithTask(Continuation <UploadTask.TaskSnapshot,Task<Uri>>{ task ->
                     if(!task.isSuccessful){
@@ -84,13 +78,13 @@ class uploadImages : Fragment() {
                         }
                     }
                     return@Continuation fileRef.downloadUrl
-
-                }).addOnCompleteListener (OnCompleteListener {
+                }).addOnCompleteListener {
                     //When the image has been uploaded
-                    var userId=FirebaseAuth.getInstance().uid.toString()
+                    val userId=FirebaseAuth.getInstance().uid.toString()
                     if(it.isSuccessful){
                         val imageUrl = it.result
-                        val db = FirebaseDatabase.getInstance().reference.child("Posts")
+                        val db = FirebaseDatabase
+                            .getInstance().reference.child("Posts")
                         val postId = db.push().key
                         val postinfo = HashMap<String, Any>()
                         postinfo["postid"] = postId!!.toString()
@@ -104,13 +98,12 @@ class uploadImages : Fragment() {
 
                         progressDialog.dismiss()
 
-
                         val editor = mContext!!.getSharedPreferences("USER", Context.MODE_PRIVATE).edit()
                         editor.putString("userid",userId)
                         editor.apply()
                         Navigation.findNavController(this.view!!).navigate(R.id.accountinfo)
                     }
-                })
+                }
 
             }
         }
@@ -118,19 +111,14 @@ class uploadImages : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-
             val result = CropImage.getActivityResult(data)
-            if (resultCode == RESULT_OK &&  requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK && requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                 val resultUri = result.uri
                 selectedImage = resultUri
-                //image.setImageURI(resultUri)
                 Picasso.get().load(resultUri).into(image!!);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
+                Toast.makeText(this.requireContext(),error.toString(),Toast.LENGTH_SHORT).show()
             }
-
     }
-
-
 }

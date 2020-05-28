@@ -38,45 +38,42 @@ class accountinfo : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_accountinfo, container, false)
     }
-
         var postList:List<Post>? = null
         var imageAdapter: ProfileImagesAdapter? = null
         var userId:String?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).hideBackButton()
+
         val preferences = context?.getSharedPreferences("USER", Context.MODE_PRIVATE)
+        val currentUser = FirebaseAuth.getInstance().uid.toString()
         if(preferences!=null){
             userId = preferences.getString("userid","none")!!
 
         }else{
-            userId=FirebaseAuth.getInstance().uid.toString()
+            userId=currentUser
         }
-        if(userId!=FirebaseAuth.getInstance().uid.toString()){
+        if(userId!=currentUser){
             edit.visibility=View.GONE
         }
-        var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
-        usersRef.addValueEventListener(object:ValueEventListener{
+        val usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
+        usersRef.addListenerForSingleValueEvent(object:ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
-                    if(p0.exists()){
-                        val user = p0.getValue<User>(User::class.java)
-                        userProfName?.text = (user?.username)
-                        println("Pic is "+user?.avatarUrl)
-                        if(profile_image!=null && user?.avatarUrl!!.isNotEmpty()){
-                            Picasso.get().load(user.avatarUrl).into(profile_image!!);
-                        }
-                        if(user?.bio!=""){
-                            bios?.text = user?.bio
-                        }else{
-                            bios?.visibility=View.GONE
-                        }
-
+                if(p0.exists()){
+                    val user = p0.getValue<User>(User::class.java)
+                    userProfName?.text = (user?.username)
+                    if(profile_image!=null && user?.avatarUrl!!.isNotEmpty()){
+                        Picasso.get().load(user.avatarUrl).into(profile_image!!);
                     }
-
-
+                    if(user?.bio!=""){
+                        bios?.text = user?.bio
+                    }else{
+                        bios?.visibility=View.GONE
+                    }
+                }
             }
             override fun onCancelled(p0: DatabaseError) {
-
             }
         })
 
@@ -86,7 +83,7 @@ class accountinfo : Fragment() {
         //Recicler
         reciclerView.setHasFixedSize(true)
 
-        var linearLayoutManager:LinearLayoutManager = GridLayoutManager(context, 3)
+        val linearLayoutManager:LinearLayoutManager = GridLayoutManager(context, 3)
         reciclerView.layoutManager = linearLayoutManager
 
         postList = ArrayList()
@@ -99,7 +96,6 @@ class accountinfo : Fragment() {
         }
         reciclerView.adapter = imageAdapter
         getUserPictures()
-
     }
 
     private fun getUserPictures(){
@@ -124,23 +120,18 @@ class accountinfo : Fragment() {
                 postnumber?.text=totalPosts.toString()
                 likes?.text =totalLikes.toString()
             }
-
             override fun onCancelled(p0: DatabaseError) {
-
             }
         })
         //Gets the total liked images
-        FirebaseDatabase.getInstance().reference.child("users").child(userId!!).child("liked").addListenerForSingleValueEvent(object: ValueEventListener{
-
-            override fun onDataChange(p0: DataSnapshot) {
-                liked?.text = p0.childrenCount.toString()
-
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-        })
+        FirebaseDatabase.getInstance().reference.child("users").child(userId!!).child("liked")
+            .addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onDataChange(p0: DataSnapshot) {
+                    liked?.text = p0.childrenCount.toString()
+                }
+                override fun onCancelled(p0: DatabaseError) {
+                }
+            })
     }
 
 }

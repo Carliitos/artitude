@@ -45,8 +45,8 @@ class editProfile : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(FirebaseAuth.getInstance().uid.toString())
-        usersRef.addValueEventListener(object: ValueEventListener {
+        val usersRef = FirebaseDatabase.getInstance().reference.child("users").child(FirebaseAuth.getInstance().uid.toString())
+        usersRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     val user = p0.getValue<User>(User::class.java)
@@ -99,15 +99,16 @@ class editProfile : Fragment() {
             (activity as MainActivity).hideBottomActionBar()
             (activity as MainActivity).hideActionBar()
             Navigation.findNavController(view).navigate(R.id.login)
-
         }
-        val preferences = context?.getSharedPreferences("STETIC", Context.MODE_PRIVATE)
+        val preferences = context?.
+            getSharedPreferences("STETIC", Context.MODE_PRIVATE)
         if(preferences!=null){
             nightmode.isChecked = preferences.getBoolean("darkmode",false)
 
         }
         nightmode.setOnCheckedChangeListener { _, isChecked ->
-            val editor = this.context!!.getSharedPreferences("STETIC", Context.MODE_PRIVATE).edit()
+            val editor = this.context!!.
+                getSharedPreferences("STETIC", Context.MODE_PRIVATE).edit()
             if(isChecked){
                 editor.putBoolean("darkmode",true)
             }else{
@@ -119,14 +120,16 @@ class editProfile : Fragment() {
     }
 
     private fun updateUser(updatedImg:String?) {
-        var database = FirebaseDatabase.getInstance().reference
-        updatedUser?.username = username.text.toString()
-        updatedUser?.bio = bio.text.toString()
+        val database = FirebaseDatabase.getInstance().reference
         if(updatedImg!=""){
-            updatedUser?.avatarUrl = updatedImg
+            database.child("users").child(updatedUser?.uid.toString()).child("avatarUrl").setValue(updatedImg)
         }
-        database.child("users").child(updatedUser?.uid.toString()).setValue(updatedUser)
-
+        if(updatedUser?.username !=username.text.toString()){
+            database.child("users").child(updatedUser?.uid.toString()).child("username").setValue(username.text.toString())
+        }
+        if(updatedUser?.bio != bio.text.toString()){
+            database.child("users").child(updatedUser?.uid.toString()).child("bio").setValue(bio.text.toString())
+        }
         Navigation.findNavController(view!!).navigate(R.id.accountinfo)
     }
 

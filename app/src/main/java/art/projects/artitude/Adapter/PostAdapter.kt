@@ -41,27 +41,18 @@ class PostAdapter(private var mContext: Context, private var post:List<Post>, pr
         }else{
             holder.postDescription.visibility=View.GONE
         }
-//        if(post.avatarUrl!=""){
-//            Picasso.get().load(post.avatarUrl).placeholder(R.drawable.profilenoimage).into(holder.userProfImage)
-//        }
-//        holder.userProfImage.setOnClickListener {
-//            val editor = mContext.getSharedPreferences("USER",Context.MODE_PRIVATE).edit()
-//            editor.putString("userid",post.uid)
-//            editor.apply()
-//
-//
-//            navController.navigate(R.id.accountinfo)
-//        }
+
         val users = FirebaseDatabase.getInstance().reference.child("users").child(post.user!!)
         users.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
-                        val user = p0.getValue(User::class.java)
-                        if(user!=null){
-                            holder.userName.text = user.username
-                            Picasso.get().load(user.avatarUrl).placeholder(R.drawable.profilenoimage).into(holder.profImage)
-
-                        }
+                val user = p0.getValue(User::class.java)
+                if(user!=null){
+                    holder.userName.text = user.username
+                    if(user.avatarUrl!=""){
+                        Picasso.get().load(user.avatarUrl).placeholder(R.drawable.profilenoimage).into(holder.profImage)
+                    }
+                }
             }
 
             override fun onCancelled(p0: DatabaseError) {

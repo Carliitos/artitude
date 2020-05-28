@@ -32,34 +32,25 @@ class login : Fragment() {
         toRegister.setOnClickListener {
             Navigation.findNavController(this.view!!).navigate(R.id.toRegister)
         }
-
+        //Gets FirebaseAuth Instance
         auth = FirebaseAuth.getInstance()
+        //Login button listener
         loginBtn.setOnClickListener {
             if(email.text.toString().isNotEmpty()&&password.text.toString().isNotEmpty()){
                 auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                     .addOnCompleteListener(this.requireActivity()) { task ->
                         if (task.isSuccessful) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success")
+                            // Sign in success, Navigates to the main view
                             val user = auth.currentUser
                             Navigation.findNavController(this.view!!).navigate(R.id.swiper)
-                            //updateUI(user)
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.exception)
-                            //Toast.makeText(baseContext, "Authentication failed.",
-                              //  Toast.LENGTH_SHORT).show()
-                            //updateUI(null)
                             errorText.text="An error occured ⚠ ${task.exception}"
                         }
-
-                        // ...
                     }
-
             }else{
                 errorText.text= "You must fill in all the fields ⚠️"
             }
-
         }
 
         //Hiding the action bar

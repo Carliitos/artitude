@@ -12,7 +12,6 @@
         android:layout_height="125dp"
         android:scaleType="centerCrop"
         >
-
     </ImageView>
-
 </androidx.cardview.widget.CardView>
+

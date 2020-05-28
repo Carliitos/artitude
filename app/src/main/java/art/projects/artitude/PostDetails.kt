@@ -50,10 +50,13 @@ class PostDetails : Fragment() {
         val animation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_open_enter)
         animation.duration=500
         postimage.startAnimation(animation)
+
         deleteButton.setOnClickListener {
             deleteButton.startAnimation(btnAnimation)
-            val animation = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_enter)
-            val animationout = AnimationUtils.loadAnimation(this.requireContext(), R.anim.fragment_fade_exit)
+            val animation = AnimationUtils
+                .loadAnimation(this.requireContext(), R.anim.fragment_fade_enter)
+            val animationout = AnimationUtils
+                .loadAnimation(this.requireContext(), R.anim.fragment_fade_exit)
             deleteWarning.startAnimation(animation)
             deleteWarning.visibility=View.VISIBLE
             deny.setOnClickListener {
@@ -65,21 +68,7 @@ class PostDetails : Fragment() {
                 deleteWarning.visibility=View.GONE
             }
             confirm.setOnClickListener {
-                val progressDialog = ProgressDialog(this.requireContext())
-                progressDialog.setTitle("Deleting Post")
-                progressDialog.setMessage("This could take a few seconds")
-                progressDialog.show()
-
-                val query = FirebaseDatabase.getInstance().reference
-                    .child("Posts").child(postId).removeValue();
-                query.addOnSuccessListener {
-                    val deleteQuery = FirebaseStorage.getInstance().reference.child("/PostImages/$imageUrl.jpg").delete()
-                    deleteQuery.addOnCompleteListener {
-                        progressDialog.dismiss()
-                        Navigation.findNavController(this.view!!).navigate(R.id.accountinfo)
-
-                    }
-                }
+                deleteImage()
             }
         }
         user.setOnClickListener {
@@ -100,13 +89,34 @@ class PostDetails : Fragment() {
         getPost()
 
     }
+
+    private fun deleteImage() {
+        val progressDialog = ProgressDialog(this.requireContext())
+        progressDialog.setTitle("Deleting Post")
+        progressDialog.setMessage("This could take a few seconds")
+        progressDialog.show()
+
+        val query =
+            FirebaseDatabase.getInstance().reference.child("Posts").child(postId)
+                .removeValue()
+        query.addOnSuccessListener {
+            val deleteQuery = FirebaseStorage
+                .getInstance().reference.child("/PostImages/$imageUrl.jpg").delete()
+            deleteQuery.addOnCompleteListener {
+                progressDialog.dismiss()
+                Navigation.findNavController(this.view!!).navigate(R.id.accountinfo)
+
+            }
+        }
+    }
+
     private fun getPost(){
-        val db = FirebaseDatabase.getInstance().reference.child("Posts").child(postId)
+        val db = FirebaseDatabase.getInstance()
+            .reference.child("Posts").child(postId)
         db.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
-                postObject = p0.getValue<Post>(Post::class.java)
-                    //println("Posts: "+postObject!!.imageUrl)
+                    postObject = p0.getValue<Post>(Post::class.java)
                     Picasso.get().load(postObject!!.imageUrl).into(postimage!!);
                     imageUrl = postObject!!.imageUrl
                     postUserId=postObject!!.user
@@ -119,27 +129,32 @@ class PostDetails : Fragment() {
                         postlikes.text = postObject!!.timesliked!!.toString()+" likes"
                     }
                 }
-
-
             }
-
             override fun onCancelled(p0: DatabaseError) {
-
             }
         })
     }
     private fun getUserInfo(userId:String){
-        var usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId)
+        val usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId)
         usersRef.addListenerForSingleValueEvent(object:ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     val user = p0.getValue<User>(User::class.java)
                     username?.text = (user?.username)
+                    var currentUserId = FirebaseAuth.getInstance().uid
                     userPostname = (user?.username)
-                    if(user?.uid != FirebaseAuth.getInstance().uid){
-                        deleteButton.visibility=View.GONE
-                    }else{
+
+                    var isAdmin:Boolean?=null
+                    val preferences = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
+                    if(preferences!=null){
+                        isAdmin = preferences.getBoolean("isAdmin",false)
+
+                    }
+
+                    if(user?.uid == FirebaseAuth.getInstance().uid||isAdmin!!){
                         deleteButton.visibility=View.VISIBLE
+                    }else{
+                        deleteButton.visibility=View.GONE
                     }
                     if(profile_image!=null && user?.avatarUrl!!.isNotEmpty()){
                         Picasso.get().load(user.avatarUrl).into(profile_image!!);
@@ -153,7 +168,7 @@ class PostDetails : Fragment() {
 
             override fun onCancelled(p0: DatabaseError) {
             }
-    })
+        })
     }
 
 

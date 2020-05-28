@@ -1,6 +1,5 @@
 package art.projects.artitude
 
-
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,16 +17,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_search_profiles.*
 
-/**
- * A simple [Fragment] subclass.
- */
 class searchProfiles : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search_profiles, container, false)
     }
     private var userAdapter: UserAdapter?=null
@@ -40,11 +35,12 @@ class searchProfiles : Fragment() {
         searchrecyler.layoutManager = LinearLayoutManager(context)
 
         mUser=ArrayList()
-        userAdapter=context?.let { UserAdapter(it,mUser as ArrayList<User>,true,this.findNavController()) }
+        userAdapter=context?.let { UserAdapter(
+            it,
+            mUser as ArrayList<User>,
+            this.findNavController()
+        ) }
         searchrecyler.adapter=userAdapter
-
-
-
 
         searchedittext.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
@@ -53,31 +49,26 @@ class searchProfiles : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(searchedittext.text.toString()==""){
-
-                }else{
+            override fun onTextChanged(s: CharSequence?, start: Int,
+                                       before: Int,
+                                       count: Int) {
+                if(searchedittext.text.toString()!=""){
                     searchedittext.visibility=View.VISIBLE
-                    findUsers()
+                    //findUsers()
                     searchUser(s.toString())
-                    println("TEXT CHANGED")
                 }
             }
-
         })
-
     }
 
     private fun searchUser(username:String) {
-        val query = FirebaseDatabase.getInstance().reference
-            .child("users")
+        val query = FirebaseDatabase.getInstance()
+            .reference.child("users")
             .orderByChild("username")
-            .startAt(username)
-            .endAt(username+"\uf0ff")
+            .startAt(username).endAt(username+"\uf0ff")
         query.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
-
             override fun onDataChange(p0: DataSnapshot) {
                 mUser?.clear()
                 for(snapshot in p0.children){
@@ -87,9 +78,8 @@ class searchProfiles : Fragment() {
                     }
                 }
                 userAdapter?.notifyDataSetChanged()
-
-        }
-    })
+            }
+        })
     }
 
     private fun findUsers(){

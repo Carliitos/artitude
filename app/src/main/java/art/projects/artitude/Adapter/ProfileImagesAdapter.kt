@@ -36,11 +36,10 @@ class ProfileImagesAdapter(private val mContext: Context, posts:List<Post>,
         val post: Post = mPost!![position]
         Picasso.get()!!.load(post.imageUrl!!).into(holder.postImage)
         holder.postImage.setOnClickListener {
-            val editor = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+            val editor =
+                mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
             editor.putString("postId",post.postid)
             editor.apply()
-
-
             navController.navigate(R.id.postDetails)
         }
     }
