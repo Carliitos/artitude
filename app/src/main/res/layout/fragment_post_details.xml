@@ -3,8 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background1"
     tools:context=".PostDetails">
-
+    <TextView
+        android:id="@+id/warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The post doesn't exist"
+        android:textColor="#FFFFFF"
+        android:layout_centerInParent="true"
+        />
     <RelativeLayout
         android:id="@+id/deleteWarning"
         android:background="#8D000000"
@@ -50,6 +58,7 @@
     </LinearLayout>
     </RelativeLayout>
     <ScrollView
+        android:id="@+id/postDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <LinearLayout

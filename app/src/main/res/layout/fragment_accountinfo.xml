@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background1"
     tools:context=".accountinfo">
 
 <ScrollView
@@ -147,15 +148,50 @@
         android:text="Edit profile"
         android:textAllCaps="false"
         />
+    <LinearLayout
+        android:id="@+id/likebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        >
+        <ImageView
+            android:id="@+id/images"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:src="@drawable/filledsquare"
+            />
+        <ImageView
+            android:id="@+id/likedimages"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:src="@drawable/heartnofill"
+            />
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reciclerView"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-
-        >
-
-    </androidx.recyclerview.widget.RecyclerView>
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginVertical="20dp"
+        android:id="@+id/likedrecycler"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The user does not exist"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        />
     </LinearLayout>
 </ScrollView>
     </RelativeLayout>

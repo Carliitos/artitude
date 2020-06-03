@@ -262,6 +262,9 @@ class swiper : Fragment() {
                 val postinfo = HashMap<String, Any>()
                 postinfo["description"] = (dataObject as cards).name.toString()
                 postinfo["tags"]= dataObject.tags.toString()
+                postinfo["imageUrl"]= dataObject.profileImageUrl.toString()
+                postinfo["postid"]= dataObject.postId.toString()
+
 
                 db.child("Posts").child(dataObject.postId!!)
                     .child("rated").child("liked")
@@ -270,9 +273,7 @@ class swiper : Fragment() {
                     .child("liked")
                     .child(dataObject.postId!!)
                     .setValue(postinfo)
-                db.child("users").child(userId!!)
-                    .child("likedTags")
-                    .setValue(dataObject.tags)
+
                 //Increases the times that the post has been liked
                 val increment = db.child("Posts")
                     .child(dataObject.postId!!).child("timesliked")
@@ -295,14 +296,12 @@ class swiper : Fragment() {
                 CardAdapter!!.notifyDataSetChanged()
             }
         })
-        flingContainer.setOnItemClickListener(object : SwipeFlingAdapterView.OnItemClickListener {
-            override fun onItemClicked(itemPosition: Int, dataObject: Any) {
-                val editor = context!!.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit()
-                editor.putString("postId",(dataObject as cards).postId)
-                editor.apply()
-                Navigation.findNavController(view!!).navigate(R.id.postDetails)
-            }
-        })
+        flingContainer.setOnItemClickListener { itemPosition, dataObject ->
+            val editor = context!!.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit()
+            editor.putString("postId",(dataObject as cards).postId)
+            editor.apply()
+            Navigation.findNavController(view!!).navigate(R.id.postDetails)
+        }
     }
     fun checkEmpty(){
         if(up2date!=null){

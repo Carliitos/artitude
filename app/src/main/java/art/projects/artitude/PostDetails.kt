@@ -128,6 +128,9 @@ class PostDetails : Fragment() {
                     }else{
                         postlikes.text = postObject!!.timesliked!!.toString()+" likes"
                     }
+                }else{
+                    postDetails.visibility=View.INVISIBLE
+                    warning.visibility=View.VISIBLE
                 }
             }
             override fun onCancelled(p0: DatabaseError) {

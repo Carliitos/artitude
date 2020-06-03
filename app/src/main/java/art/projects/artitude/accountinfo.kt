@@ -2,6 +2,7 @@ package art.projects.artitude
 
 
 import android.content.Context
+import android.media.Image
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import art.projects.artitude.Adapter.LikedImagesAdapter
 import art.projects.artitude.Adapter.ProfileImagesAdapter
 import art.projects.artitude.Models.Post
 import art.projects.artitude.Models.User
@@ -22,13 +24,11 @@ import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.fragment_accountinfo.*
 import kotlinx.android.synthetic.main.fragment_accountinfo.profile_image
+import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class accountinfo : Fragment() {
 
     override fun onCreateView(
@@ -39,7 +39,9 @@ class accountinfo : Fragment() {
         return inflater.inflate(R.layout.fragment_accountinfo, container, false)
     }
         var postList:List<Post>? = null
+        var likedPostList:List<Post>? = null
         var imageAdapter: ProfileImagesAdapter? = null
+        var likedImageAdapter: LikedImagesAdapter? = null
         var userId:String?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,13 +50,20 @@ class accountinfo : Fragment() {
 
         val preferences = context?.getSharedPreferences("USER", Context.MODE_PRIVATE)
         val currentUser = FirebaseAuth.getInstance().uid.toString()
-        if(preferences!=null){
-            userId = preferences.getString("userid","none")!!
-
-        }else{
+        if(preferences==null){
             userId=currentUser
+        }else{
+            userId = preferences.getString("userid","none")!!
+            if(userId=="none"){
+                alert.visibility=View.VISIBLE
+                reciclerView.visibility=View.GONE
+            }
         }
-        if(userId!=currentUser){
+
+        if(userId==currentUser){
+            getLikedPictures()
+        }else{
+            likebar.visibility=View.INVISIBLE
             edit.visibility=View.GONE
         }
         val usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId!!)
@@ -95,7 +104,68 @@ class accountinfo : Fragment() {
             )
         }
         reciclerView.adapter = imageAdapter
+
+        //Liked recycler
+
+        val linearLayoutManagerliked:LinearLayoutManager = GridLayoutManager(context, 3)
+        likedrecycler.setHasFixedSize(true)
+
+        likedrecycler.layoutManager = linearLayoutManagerliked
+
+        likedPostList = ArrayList()
+        likedImageAdapter = context?.let {
+            LikedImagesAdapter(
+                it,
+                likedPostList as ArrayList<Post>,
+                Navigation.findNavController(this.view!!)
+            )
+        }
+        likedrecycler.adapter = likedImageAdapter
+
+
+
+
         getUserPictures()
+
+
+        //Liked images
+        likedimages.setOnClickListener {
+            likedrecycler.visibility=View.VISIBLE
+            reciclerView.visibility=View.GONE
+            likedimages.setImageResource(R.drawable.heartfill)
+            images.setImageResource(R.drawable.squarenofil)
+        }
+        images.setOnClickListener {
+            reciclerView.visibility=View.VISIBLE
+            likedrecycler.visibility=View.GONE
+            likedimages.setImageResource(R.drawable.heartnofill)
+            images.setImageResource(R.drawable.filledsquare)
+
+        }
+    }
+
+    private fun getLikedPictures() {
+        val posts = FirebaseDatabase.getInstance().reference.child("users").child(userId.toString()).child("liked")
+        posts.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    (likedPostList as ArrayList<Post>).clear()
+                    for(snapshot in p0.children){
+                        val post = snapshot.getValue(Post::class.java)!!
+
+                            if(post.imageUrl!=""&&Picasso.get().load(post.imageUrl!!)!=null){
+                                (likedPostList as ArrayList<Post>).add(post)
+
+                            }
+                            println("There is a liked image")
+                        //Collections.reverse(postList!!)
+                    }
+                            likedImageAdapter?.notifyDataSetChanged()
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        })
     }
 
     private fun getUserPictures(){
