@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    >
+
+    <TextView
+    android:id="@+id/textinside"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="right"
+    android:layout_toStartOf="@+id/profile_image"
+    android:layout_alignParentEnd="true"
+    android:background="@drawable/chatbubble"
+    android:padding="15dp"
+    android:layout_marginRight="8dp"
+    android:maxWidth="300dp"
+    android:text=""/>
+</RelativeLayout>

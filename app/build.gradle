@@ -64,4 +64,6 @@ dependencies {
 
     //Stars background
     implementation 'com.sofakingforever.libraries:animated-stars-android:1.1.4@aar'
+
+    implementation "com.xwray:groupie:2.8.0"
 }

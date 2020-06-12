@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +44,9 @@ class accountinfo : Fragment() {
         var imageAdapter: ProfileImagesAdapter? = null
         var likedImageAdapter: LikedImagesAdapter? = null
         var userId:String?=null
+    companion object{
+        var userobj:User?=null
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,6 +66,7 @@ class accountinfo : Fragment() {
 
         if(userId==currentUser){
             getLikedPictures()
+            sendmessage.visibility=View.GONE
         }else{
             likebar.visibility=View.INVISIBLE
             edit.visibility=View.GONE
@@ -71,6 +76,7 @@ class accountinfo : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     val user = p0.getValue<User>(User::class.java)
+                    userobj = user
                     userProfName?.text = (user?.username)
                     if(profile_image!=null && user?.avatarUrl!!.isNotEmpty()){
                         Picasso.get().load(user.avatarUrl).into(profile_image!!);
@@ -80,6 +86,7 @@ class accountinfo : Fragment() {
                     }else{
                         bios?.visibility=View.GONE
                     }
+
                 }
             }
             override fun onCancelled(p0: DatabaseError) {
@@ -141,6 +148,11 @@ class accountinfo : Fragment() {
             likedimages.setImageResource(R.drawable.heartnofill)
             images.setImageResource(R.drawable.filledsquare)
 
+        }
+
+
+        sendmessage.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.toChat)
         }
     }
 

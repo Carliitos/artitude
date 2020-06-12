@@ -3,13 +3,23 @@ package art.projects.artitude
 
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.navigation.Navigation
 import art.projects.artitude.Models.Post
 import art.projects.artitude.Models.User
@@ -21,6 +31,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_post_details.*
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.*
 
 
 class PostDetails : Fragment() {
@@ -161,6 +175,12 @@ class PostDetails : Fragment() {
                     }
                     if(profile_image!=null && user?.avatarUrl!!.isNotEmpty()){
                         Picasso.get().load(user.avatarUrl).into(profile_image!!);
+
+                        download.setOnClickListener {
+                            (activity as MainActivity).checkPermissions()
+                        //    (activity as MainActivity).saveImageToInternalStorage(bitmap!!)
+                        }
+
                     }
 
 
@@ -173,6 +193,8 @@ class PostDetails : Fragment() {
             }
         })
     }
+
+
 
 
 }

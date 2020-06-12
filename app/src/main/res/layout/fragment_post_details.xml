@@ -7,6 +7,7 @@
     tools:context=".PostDetails">
     <TextView
         android:id="@+id/warning"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="The post doesn't exist"
@@ -135,6 +136,15 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/sharebtn"
                 android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"
+                />
+            <ImageView
+                android:id="@+id/download"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/downloadicon"
+                android:layout_toLeftOf="@id/share"
                 android:layout_margin="10dp"
                 />
         </RelativeLayout>

@@ -37,7 +37,12 @@
         android:id="@+id/accountinfo"
         android:name="art.projects.artitude.accountinfo"
         android:label="Profile"
-        tools:layout="@layout/fragment_accountinfo" />
+        tools:layout="@layout/fragment_accountinfo" >
+        <action
+            android:id="@+id/toChat"
+            app:destination="@id/chat"
+            app:enterAnim="@anim/nav_default_pop_enter_anim" />
+    </fragment>
     <fragment
         android:id="@+id/editProfile"
         android:name="art.projects.artitude.editProfile"
@@ -63,4 +68,14 @@
         android:name="art.projects.artitude.trends"
         android:label="Trending"
         tools:layout="@layout/fragment_trends" />
+    <fragment
+        android:id="@+id/latestMessages"
+        android:name="art.projects.artitude.LatestMessages"
+        android:label="fragment_latest_messages"
+        tools:layout="@layout/fragment_latest_messages" />
+    <fragment
+        android:id="@+id/chat"
+        android:name="art.projects.artitude.chat"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

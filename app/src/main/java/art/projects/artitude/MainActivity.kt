@@ -1,11 +1,19 @@
 package art.projects.artitude
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
@@ -154,6 +162,29 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    }
+    fun saveImageToInternalStorage(drawableId: Bitmap){
+
+        val bitmap = drawableId
+
+        MediaStore.Images.Media.insertImage(
+            getContentResolver(),
+            bitmap,
+            "demo_image",
+            "demo_image"
+        );
+
+        Toast.makeText(this, "Imagen guardada en la galería", Toast.LENGTH_LONG).show();
+
+    }
+    fun checkPermissions():Boolean{
+        var PERMISSIONS: Array<String> = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, 112 );
+            return false;
+        }
+        return true;
     }
 
 }
