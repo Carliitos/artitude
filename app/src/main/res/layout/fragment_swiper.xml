@@ -20,6 +20,15 @@
         app:starsView_starColors="@array/star_colors_small"
         app:starsView_starCount="50" />
 
+    <ImageView
+        android:id="@+id/openchat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/chaticon"
+        android:layout_margin="10dp"
+        />
+
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/frame"
         android:layout_width="match_parent"

@@ -21,15 +21,17 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.navigation.Navigation
+import art.projects.artitude.Models.Comment
 import art.projects.artitude.Models.Post
 import art.projects.artitude.Models.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.comment_row.view.*
 import kotlinx.android.synthetic.main.fragment_post_details.*
 import java.io.*
 import java.net.HttpURLConnection
@@ -51,10 +53,14 @@ class PostDetails : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_post_details, container, false)
     }
+    var userid:String?=null
+    companion object{
+    val adapter = GroupAdapter<GroupieViewHolder>()
 
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        userid=FirebaseAuth.getInstance().currentUser!!.uid
         val preferences = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
         if(preferences!=null){
             postId = preferences.getString("postId","none")!!
@@ -102,6 +108,99 @@ class PostDetails : Fragment() {
 
         getPost()
 
+        //Comments
+        recycler.adapter=adapter
+        getComments()
+        sendbtn.setOnClickListener {
+            if(message.text.toString()!=""){
+                sendComment(message.text.toString())
+            }
+        }
+
+    }
+
+    private fun sendComment(comment: String) {
+        //Sending a comment to firebase
+        val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+
+        val reference = FirebaseDatabase.getInstance().getReference("/post-comment/$postId/").push()
+
+        val chatMmessage = Comment(reference.key,"",comment, currentUser, System.currentTimeMillis()/1000,"")
+        reference.setValue(chatMmessage)
+            .addOnSuccessListener {
+                message.setText("")
+                recycler.scrollToPosition(adapter.itemCount-1)
+            }
+    }
+
+    private fun getComments() {
+        val ref = FirebaseDatabase.getInstance().getReference("/post-comment/$postId")
+        ref.addChildEventListener(object: ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val coment = p0.getValue(Comment::class.java)?:return
+                coment.current=userid!!
+                coment.postid=postId
+                comments[p0.key!!] = coment
+                refreshRecycler()
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                val coment = p0.getValue(Comment::class.java)?:return
+                coment.current=userid!!
+                coment.postid=postId
+                comments.remove(p0.key!!)
+                refreshRecycler()
+            }
+        })
+    }
+    val comments = HashMap<String, Comment>()
+    private fun refreshRecycler(){
+        adapter.clear()
+        comments.values.forEach {
+            adapter.add(CommentAdapter(it))
+        }
+    }
+    class CommentAdapter(val commentobj: Comment): Item<GroupieViewHolder>(){
+        var otherUser:User?=null
+
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+            viewHolder.itemView.commenttext.setText(commentobj.commenttext)
+
+            if(commentobj.userId==commentobj.current){
+                viewHolder.itemView.deletecomment.visibility=View.VISIBLE
+                viewHolder.itemView.deletecomment.setOnClickListener {
+                    FirebaseDatabase.getInstance().getReference("/post-comment/${commentobj.postid}").child(commentobj.commentid.toString()).removeValue().addOnSuccessListener {
+                    }
+                }
+
+            }
+            val ref = FirebaseDatabase.getInstance().getReference("/users/${commentobj.userId}")
+            ref.addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    otherUser = p0.getValue(User::class.java)
+                    viewHolder.itemView.usernamecomment.text = otherUser!!.username
+
+                }
+
+            })
+        }
+        override fun getLayout(): Int {
+            return R.layout.comment_row
+        }
     }
 
     private fun deleteImage() {
@@ -127,7 +226,7 @@ class PostDetails : Fragment() {
     private fun getPost(){
         val db = FirebaseDatabase.getInstance()
             .reference.child("Posts").child(postId)
-        db.addListenerForSingleValueEvent(object: ValueEventListener{
+        db.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     postObject = p0.getValue<Post>(Post::class.java)

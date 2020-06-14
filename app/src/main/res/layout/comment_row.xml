@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    >
+
+    <TextView
+        android:id="@+id/usernamecomment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp"
+        />
+<TextView
+    android:id="@+id/commenttext"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="#FFFFFF"
+    android:maxWidth="300dp"
+    android:text=""
+    android:layout_toLeftOf="@+id/deletecomment"
+    android:layout_below="@+id/usernamecomment"
+    />
+    <ImageView
+        android:id="@+id/deletecomment"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+
+        android:src="@drawable/delete"/>
+
+</RelativeLayout>

@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/latestMessages"
         android:name="art.projects.artitude.LatestMessages"
-        android:label="fragment_latest_messages"
+        android:label="Latest messages"
         tools:layout="@layout/fragment_latest_messages" />
     <fragment
         android:id="@+id/chat"

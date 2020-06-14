@@ -49,6 +49,10 @@ class swiper : Fragment() {
         //Set the particles size, so they adjust to the screen size
         screenSize()
 
+        openchat.setOnClickListener {
+            Navigation.findNavController(view!!).navigate(R.id.latestMessages)
+        }
+
         userId =FirebaseAuth.getInstance().uid
 
         //Background fade in animation

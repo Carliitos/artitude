@@ -55,25 +55,29 @@ class chat : Fragment() {
         recycler.adapter=adapter
         setupData()
         sendbtn.setOnClickListener {
-            sendMessage()
+            if(message.text.toString()!=""){
+                sendMessage()
+            }
         }
     }
 
     private fun sendMessage() {
         //Sending a message to firebase
         val currentUser = userid
-        //val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
         val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$currentUser/${userobj!!.uid}").push()
         val toref = FirebaseDatabase.getInstance().getReference("/user-messages/${userobj!!.uid}/$currentUser").push()
         if(userobj!!.uid==null) return
         val chatMmessage = Message(reference.key!!, message.text.toString(),currentUser!!, userobj!!.uid!!, System.currentTimeMillis()/1000)
         reference.setValue(chatMmessage)
             .addOnSuccessListener {
-
+                message.setText("")
+                recycler.scrollToPosition(adapter.itemCount-1)
             }
         toref.setValue(chatMmessage)
-        message.setText("")
-        recycler.scrollToPosition(adapter.itemCount-1)
+        FirebaseDatabase.getInstance().getReference("/latest-messages/$currentUser/${userobj!!.uid}")
+            .setValue(chatMmessage)
+        FirebaseDatabase.getInstance().getReference("/latest-messages/${userobj!!.uid}/$currentUser")
+            .setValue(chatMmessage)
     }
 
     private fun setupData() {
@@ -97,10 +101,10 @@ class chat : Fragment() {
                         adapter.add(ChatFromItem(chatMessage.text))
                         if(userobj!!.avatarUrl!=""&&userobj!!.avatarUrl!=null){
                             println("The image: "+userobj!!.avatarUrl)
-                            //Picasso.get().load(userobj!!.avatarUrl!!).into(bubblesentimage!!)
                         }
                     }
                 }
+                recycler.scrollToPosition(adapter.itemCount-1)
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
@@ -120,7 +124,10 @@ class chat : Fragment() {
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.textinside.text=text
-            Picasso.get().load(userobj!!.avatarUrl!!).into(viewHolder.itemView.bubblerecievedimage)
+            if(userobj!!.avatarUrl!!.isNotEmpty()){
+                Picasso.get().load(userobj!!.avatarUrl!!).into(viewHolder.itemView.bubblerecievedimage)
+
+            }
         }
     }
     class ChatToItem(val text: String): Item<GroupieViewHolder>(){

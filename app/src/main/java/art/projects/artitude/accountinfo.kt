@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 
 import kotlinx.android.synthetic.main.fragment_accountinfo.*
 import kotlinx.android.synthetic.main.fragment_accountinfo.profile_image
@@ -129,11 +131,7 @@ class accountinfo : Fragment() {
         }
         likedrecycler.adapter = likedImageAdapter
 
-
-
-
         getUserPictures()
-
 
         //Liked images
         likedimages.setOnClickListener {
@@ -147,13 +145,11 @@ class accountinfo : Fragment() {
             likedrecycler.visibility=View.GONE
             likedimages.setImageResource(R.drawable.heartnofill)
             images.setImageResource(R.drawable.filledsquare)
-
         }
-
-
         sendmessage.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.toChat)
         }
+
     }
 
     private fun getLikedPictures() {
