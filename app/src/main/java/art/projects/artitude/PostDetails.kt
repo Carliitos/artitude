@@ -226,11 +226,11 @@ class PostDetails : Fragment() {
     private fun getPost(){
         val db = FirebaseDatabase.getInstance()
             .reference.child("Posts").child(postId)
-        db.addValueEventListener(object: ValueEventListener{
+        db.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     postObject = p0.getValue<Post>(Post::class.java)
-                    Picasso.get().load(postObject!!.imageUrl).into(postimage!!);
+                    Picasso.get().load(postObject!!.imageUrl!!).into(postimage!!);
                     imageUrl = postObject!!.imageUrl
                     postUserId=postObject!!.user
                     desc.text = postObject!!.description
@@ -277,15 +277,13 @@ class PostDetails : Fragment() {
 
                         download.setOnClickListener {
                             (activity as MainActivity).checkPermissions()
-                        //    (activity as MainActivity).saveImageToInternalStorage(bitmap!!)
+                            (activity as MainActivity).saveImageToInternalStorage(imageUrl!!)
+                            val animation = AnimationUtils.loadAnimation(context, R.anim.fragment_open_enter)
+                            animation.duration=500
+                            download.startAnimation(animation)
                         }
-
                     }
-
-
                 }
-
-
             }
 
             override fun onCancelled(p0: DatabaseError) {

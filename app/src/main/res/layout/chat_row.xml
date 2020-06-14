@@ -25,4 +25,12 @@
     android:layout_marginLeft="8dp"
     android:maxWidth="300dp"
     android:text=""/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bubbleimgrec"
+        android:layout_margin="10dp"
+        android:maxHeight="200dp"
+        android:layout_toRightOf="@+id/bubblerecievedimage"
+        />
 </RelativeLayout>

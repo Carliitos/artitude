@@ -28,6 +28,16 @@
         android:textColor="#FFFFFF"
         android:inputType="textCapSentences"
         android:textColorHint="#FFFFFF" />
+
+        <ImageView
+            android:id="@+id/file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/message"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/fileicon" />
     <RelativeLayout
         android:id="@+id/sendbtn"
         android:layout_marginEnd="10dp"

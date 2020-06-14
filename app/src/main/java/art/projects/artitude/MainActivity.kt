@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
@@ -163,18 +164,10 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-    fun saveImageToInternalStorage(drawableId: Bitmap){
+    fun saveImageToInternalStorage(url: String){
 
-        val bitmap = drawableId
-
-        MediaStore.Images.Media.insertImage(
-            getContentResolver(),
-            bitmap,
-            "demo_image",
-            "demo_image"
-        );
-
-        Toast.makeText(this, "Imagen guardada en la galería", Toast.LENGTH_LONG).show();
+        Picasso.get().load(url).into( TargetPhoneGallery(this.contentResolver, "image name", "image desc"));
+        Toast.makeText(this, "Image downloaded to storage", Toast.LENGTH_SHORT).show()
 
     }
     fun checkPermissions():Boolean{

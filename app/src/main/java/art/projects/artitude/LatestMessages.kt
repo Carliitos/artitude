@@ -80,7 +80,7 @@ class LatestMessages : Fragment() {
         val mensajesHashMap = HashMap<String, Message>()
     private fun refreshRecycler(){
             adapter.clear()
-        mensajesHashMap.values.forEach {
+            mensajesHashMap.values.forEach {
             adapter.add(UsuarioLatest(it))
         }
     }
@@ -98,12 +98,15 @@ class LatestMessages : Fragment() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val chatMessage = p0.getValue(Message::class.java)?:return
+                if(chatMessage.text=="") chatMessage.text="Image"
                 mensajesHashMap[p0.key!!] = chatMessage
+                notification!!.visibility=View.GONE
                 refreshRecycler()
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val chatMessage = p0.getValue(Message::class.java)?:return
+                if(chatMessage.text=="") chatMessage.text="Image"
                 mensajesHashMap[p0.key!!] = chatMessage
                 refreshRecycler()
             }
