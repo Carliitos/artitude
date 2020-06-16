@@ -3,23 +3,16 @@ package art.projects.artitude
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.core.view.iterator
 import androidx.navigation.Navigation
 import art.projects.artitude.Models.Comment
 import art.projects.artitude.Models.Post
@@ -33,9 +26,6 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.comment_row.view.*
 import kotlinx.android.synthetic.main.fragment_post_details.*
-import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.*
 
 
@@ -56,7 +46,7 @@ class PostDetails : Fragment() {
     var userid:String?=null
     companion object{
     val adapter = GroupAdapter<GroupieViewHolder>()
-
+    var tagtext:String?=null
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -106,7 +96,7 @@ class PostDetails : Fragment() {
             startActivity(Intent.createChooser(shareIntent,"Share post"))
         }
 
-        getPost()
+        getPost(this.view!!)
 
         //Comments
         recycler.adapter=adapter
@@ -223,7 +213,7 @@ class PostDetails : Fragment() {
         }
     }
 
-    private fun getPost(){
+    private fun getPost(view: View) {
         val db = FirebaseDatabase.getInstance()
             .reference.child("Posts").child(postId)
         db.addListenerForSingleValueEvent(object: ValueEventListener{
@@ -235,7 +225,8 @@ class PostDetails : Fragment() {
                     postUserId=postObject!!.user
                     desc.text = postObject!!.description
                     getUserInfo(postObject!!.user!!)
-                    tags.text = postObject!!.tags!!
+                    //tags.text = postObject!!.tags!!
+                    setTags(postObject!!.tags!!, view)
                     if(postObject!!.timesliked==1){
                         postlikes.text = postObject!!.timesliked!!.toString()+" like"
                     }else{
@@ -250,6 +241,44 @@ class PostDetails : Fragment() {
             }
         })
     }
+
+    private fun setTags(tags: String, view: View) {
+        val tagarray = tags.split(" ").toTypedArray()
+
+        for (mtag in  tagarray){
+
+        }
+        var totalHeight = 40;
+
+        for (i in tagarray.indices) {
+            tagarray[i] = "#"+tagarray[i]
+            totalHeight += 40;
+        }
+        println("The total height: "+totalHeight)
+        taglist.layoutParams.height=totalHeight*2
+
+        val adapter = ArrayAdapter(this.requireContext(), R.layout.item, tagarray)
+        taglist.adapter = adapter
+
+
+
+
+
+        taglist.onItemClickListener = object : AdapterView.OnItemClickListener {
+
+            override fun onItemClick(parent: AdapterView<*>, view: View,
+                                     position: Int, id: Long) {
+
+                val itemValue = taglist.getItemAtPosition(position) as String
+                val itemwithothashtag = itemValue.removePrefix("#")
+                tagtext = itemwithothashtag
+                Navigation.findNavController(view).navigate(R.id.tagsView)
+
+            }
+        }
+
+    }
+
     private fun getUserInfo(userId:String){
         val usersRef = FirebaseDatabase.getInstance().reference.child("users").child(userId)
         usersRef.addListenerForSingleValueEvent(object:ValueEventListener{

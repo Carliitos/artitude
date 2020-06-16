@@ -78,4 +78,9 @@
         android:name="art.projects.artitude.chat"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/tagsView"
+        android:name="art.projects.artitude.tagsView"
+        android:label="fragment_tags_view"
+        tools:layout="@layout/fragment_tags_view" />
 </navigation>

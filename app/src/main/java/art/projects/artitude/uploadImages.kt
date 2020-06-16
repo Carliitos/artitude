@@ -16,7 +16,6 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -94,6 +93,10 @@ class uploadImages : Fragment() {
                         postinfo["user"] = userId
                         postinfo["imageUrl"] =imageUrl.toString()
 
+                        val tags = tags.text.toString().toLowerCase().split(" ").toTypedArray()
+
+                        uploadTags(tags, postinfo, postId)
+
                         db.child(postId).updateChildren(postinfo)
 
                         progressDialog.dismiss()
@@ -106,6 +109,18 @@ class uploadImages : Fragment() {
                 }
 
             }
+        }
+    }
+
+    private fun uploadTags(
+        tags: Array<String>,
+        post: HashMap<String, Any>,
+        postId: String
+    ) {
+        val db = FirebaseDatabase
+            .getInstance().reference.child("Tags")
+        for(tag: String in tags){
+            db.child(tag).child(postId).setValue(post)
         }
     }
 

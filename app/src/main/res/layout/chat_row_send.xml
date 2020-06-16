@@ -9,7 +9,7 @@
     >
 
     <TextView
-    android:background="@drawable/chatbubble"
+    android:background="@drawable/chatbubbleright"
     android:id="@+id/textinside"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

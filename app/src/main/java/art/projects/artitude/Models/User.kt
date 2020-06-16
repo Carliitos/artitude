@@ -6,7 +6,4 @@ data class User(
     var bio: String? = "",
     var avatarUrl: String? = "",
     var isAdmin: Boolean? = null
-
-
-
 )

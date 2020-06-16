@@ -168,6 +168,11 @@
         android:textColor="#2196F3"
         android:text=""
         />
+        <ListView
+            android:id="@+id/taglist"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

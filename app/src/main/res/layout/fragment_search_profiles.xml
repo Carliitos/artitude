@@ -40,11 +40,41 @@
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/likebar"
+        android:background="#72252525"
+        android:layout_below="@+id/searchbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="3dp"
+        >
+        <ImageView
+            android:id="@+id/profiles"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:src="@drawable/profileicon"
+            />
+        <ImageView
+            android:id="@+id/hashtag"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:src="@drawable/hashtag"
+            />
+    </LinearLayout>
 <androidx.recyclerview.widget.RecyclerView
+
     android:id="@+id/searchrecyler"
-    android:layout_below="@+id/searchbar"
+    android:layout_below="@+id/likebar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
     />
+    <ListView
+        android:id="@+id/taglist"
+        android:layout_below="@+id/likebar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </RelativeLayout>
