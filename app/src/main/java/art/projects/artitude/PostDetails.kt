@@ -277,6 +277,8 @@ class PostDetails : Fragment() {
             }
         }
 
+
+
     }
 
     private fun getUserInfo(userId:String){

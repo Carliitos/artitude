@@ -29,6 +29,30 @@
         android:layout_margin="10dp"
         />
 
+    <ImageView
+        android:id="@+id/report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.5"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/warning" />
+    <TextView
+        android:id="@+id/confirmReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textColor="#FF9900"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:text="Swipe left to confirm the report ⚠️"
+        />
+
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/frame"
         android:layout_width="match_parent"
@@ -73,5 +97,48 @@
             android:layout_margin="60dp"
             />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/reportWarning"
+        android:background="#8D000000"
+        android:translationZ="999999dp"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:clickable="true"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/warningbackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:textColor="#FFFFFF"
+                android:text="Do you want to report this image?"
+
+                />
+            <Button
+                android:id="@+id/confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="yes"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/loginbtn"
+                android:layout_marginBottom="10dp"
+                />
+            <Button
+                android:id="@+id/deny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="no"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/loginbtn"
+                />
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

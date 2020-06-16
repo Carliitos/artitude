@@ -7,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 import art.projects.artitude.R;
@@ -14,10 +21,12 @@ import art.projects.artitude.Models.cards;
 
 
 public class CardAdapter extends ArrayAdapter<cards>{
+    Context context;
     public CardAdapter(Context context, int resourceId, List<cards> items){
         super(context, resourceId, items);
     }
     public View getView(int position, View convertView, ViewGroup parent){
+        context = getContext();
         cards card_item = getItem(position);
         if (convertView == null){
             convertView = LayoutInflater
@@ -32,6 +41,7 @@ public class CardAdapter extends ArrayAdapter<cards>{
         }
         name.setText(card_item.getName());
         Picasso.get().load(card_item.getProfileImageUrl()).into(image);
+
 
         return convertView;
     }

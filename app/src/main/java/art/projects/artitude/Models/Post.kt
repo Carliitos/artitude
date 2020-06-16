@@ -6,5 +6,7 @@ data class Post(
     var postid: String? = "",
     var tags: String? = "",
     var timesliked: Int? = 0,
+    var timesvoted: Int?=0,
+    var timesreported: Int?=0,
     var user: String? = ""
 )

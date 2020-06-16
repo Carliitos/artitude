@@ -15,10 +15,8 @@ import art.projects.artitude.Adapter.CardAdapter
 import art.projects.artitude.Models.Post
 import art.projects.artitude.Models.cards
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.plattysoft.leonids.ParticleSystem
 import kotlinx.android.synthetic.main.fragment_swiper.*
@@ -40,6 +38,8 @@ class swiper : Fragment() {
     }
     var rowItems:List<cards>?=null
     var animation:Animation?=null
+
+    var isReported:Boolean?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val context = this.requireContext()
@@ -77,6 +77,26 @@ class swiper : Fragment() {
                 }
             }
         }
+        isReported=false;
+        report.setOnClickListener {
+
+
+                reportWarning.visibility=View.VISIBLE
+
+            confirm.setOnClickListener {
+                confirmReport.visibility=View.VISIBLE
+                isReported = true;
+                reportWarning.visibility=View.GONE
+                report.alpha=1f
+                report.setImageResource(R.drawable.warningred)
+            }
+            deny.setOnClickListener {
+                isReported = false;
+                report.setImageResource(R.drawable.warning)
+                reportWarning.visibility=View.GONE
+            }
+        }
+
     }
     var tags:ArrayList<String>?=null
     private fun getPosts(){
@@ -235,7 +255,6 @@ class swiper : Fragment() {
         flingContainer.adapter = CardAdapter;
         flingContainer.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
             override fun onScroll(p0: Float) {
-                println(p0)
                 if(p0>0){
                     likedislikeimg.setImageResource(R.drawable.heart)
                 }else{
@@ -251,6 +270,8 @@ class swiper : Fragment() {
 
             override fun onLeftCardExit(dataObject: Any) {
                 likedislikeimg.alpha=0f
+                confirmReport.visibility=View.GONE
+                report.setImageResource(R.drawable.warning)
                 val postinfo = HashMap<String, Any>()
                 postinfo["description"] = (dataObject as cards).name.toString()
                 postinfo["tags"]= dataObject.tags.toString()
@@ -258,10 +279,36 @@ class swiper : Fragment() {
                     .child(dataObject.postId!!)
                     .child("rated").child("disliked")
                     .child(userId!!).setValue(true)
+
+                increaseTimesVoted(dataObject, db)
+                println("is reported "+isReported)
+                if(isReported!!){
+                    val increment = db.child("Posts")
+                        .child(dataObject.postId!!).child("timesreported")
+                    increment.addListenerForSingleValueEvent(object: ValueEventListener {
+                        override fun onDataChange(p0: DataSnapshot) {
+                            if(p0.exists()&&p0.getValue(Int::class.java)!=null){
+                                println("RESPORTEEEEEEEEEEEEEEEEEED")
+                                val amount = p0.getValue(Int::class.java)
+                                db.child("Posts").child(dataObject.postId!!)
+                                    .child("timesreported").setValue(amount!! +1)
+                                shouldbedeleted(amount+1, dataObject, db)
+                            }else{
+                                db.child("Posts").child(dataObject.postId!!)
+                                    .child("timesreported").setValue(1)
+                            }
+
+                        }
+                        override fun onCancelled(p0: DatabaseError) {
+                        }
+                    })
+                }
             }
 
             override fun onRightCardExit(dataObject: Any) {
                 startParticles()
+                confirmReport.visibility=View.GONE
+                report.setImageResource(R.drawable.warning)
                 likedislikeimg.alpha=0f
                 val postinfo = HashMap<String, Any>()
                 postinfo["description"] = (dataObject as cards).name.toString()
@@ -295,6 +342,7 @@ class swiper : Fragment() {
                     override fun onCancelled(p0: DatabaseError) {
                     }
                 })
+                increaseTimesVoted(dataObject, db)
             }
             override fun onAdapterAboutToEmpty(itemsInAdapter: Int) {
                 CardAdapter!!.notifyDataSetChanged()
@@ -307,6 +355,59 @@ class swiper : Fragment() {
             Navigation.findNavController(view!!).navigate(R.id.postDetails)
         }
     }
+
+    private fun shouldbedeleted(timesreported: Int, dataObject: cards, db: DatabaseReference) {
+        val voted = db.child("Posts")
+            .child(dataObject.postId!!).child("timesvoted")
+        voted.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()&&p0.getValue(Int::class.java)!=null){
+                    val timesvoted = p0.getValue(Int::class.java)
+                    //Si se ha votado más de X veces y el porcentaje de reportes es superior a X se elimina el post
+                    if(timesvoted!!>5){
+                        val porcentajeReport = (timesreported*100)/timesvoted!!
+                        if(porcentajeReport>=25){
+                            val query =
+                                FirebaseDatabase.getInstance().reference.child("Posts").child(dataObject.postId!!)
+                                    .removeValue()
+                            query.addOnSuccessListener {
+                                val deleteQuery = FirebaseStorage
+                                    .getInstance().reference.child("/PostImages/${dataObject.profileImageUrl}").delete()
+                                deleteQuery.addOnCompleteListener {
+                                    println("Image deleted...")
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        })
+
+    }
+
+    private fun increaseTimesVoted(dataObject: cards, db: DatabaseReference) {
+        //Increases the times that the post has been voted
+        val voted = db.child("Posts")
+            .child(dataObject.postId!!).child("timesvoted")
+        voted.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()&&p0.getValue(Int::class.java)!=null){
+                    val amount = p0.getValue(Int::class.java)
+                    db.child("Posts").child(dataObject.postId!!)
+                        .child("timesvoted").setValue(amount!! +1)
+                }else{
+                    db.child("Posts").child(dataObject.postId!!)
+                        .child("timesvoted").setValue(1)
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        })
+    }
+
     fun checkEmpty(){
         if(up2date!=null){
             if(rowItems!!.isEmpty()){

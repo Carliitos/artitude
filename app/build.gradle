@@ -66,4 +66,6 @@ dependencies {
     implementation 'com.sofakingforever.libraries:animated-stars-android:1.1.4@aar'
 
     implementation "com.xwray:groupie:2.8.0"
+
+    implementation 'com.google.android.gms:play-services-ads:19.1.0'
 }

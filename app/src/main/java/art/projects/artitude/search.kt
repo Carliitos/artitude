@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_post_details.*
 import kotlinx.android.synthetic.main.fragment_search_profiles.*
 import kotlinx.android.synthetic.main.fragment_search_profiles.taglist
 
-class searchProfiles : Fragment() {
+class search : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

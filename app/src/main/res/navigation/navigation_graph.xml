@@ -60,7 +60,7 @@
         tools:layout="@layout/fragment_post_details" />
     <fragment
         android:id="@+id/searchProfiles"
-        android:name="art.projects.artitude.searchProfiles"
+        android:name="art.projects.artitude.search"
         android:label="Search"
         tools:layout="@layout/fragment_search_profiles" />
     <fragment
